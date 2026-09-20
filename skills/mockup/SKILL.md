@@ -221,7 +221,7 @@ const local = async (id, key) => {
 try {
 const n = await figma.getNodeByIdAsync(id)
 return n && (!key || n.key === key) ? n : null
-} catch (e) {
+} catch {
 return null
 }
 }
