@@ -1,0 +1,19 @@
+{
+  "name": "figma-plugin-kit",
+  "version": "0.4.0",
+  "description": "Claude Code plugin for building Figma plugins with figma-plugin-boilerplate-svelte, figma-ui3-kit-svelte, and figma-plugin-utilities.",
+  "author": {
+    "name": "Marius Roosendaal",
+    "url": "https://github.com/mariusroosendaal"
+  },
+  "homepage": "https://github.com/mariusroosendaal/figma-plugin-kit",
+  "license": "MIT",
+  "keywords": [
+    "figma",
+    "figma-plugin",
+    "svelte",
+    "scaffold",
+    "ui3-kit"
+  ],
+  "repository": "https://github.com/mariusroosendaal/figma-plugin-kit"
+}

@@ -1,0 +1,15 @@
+{
+  "name": "marius-plugins",
+  "owner": {
+    "name": "Marius Roosendaal",
+    "url": "https://github.com/mariusroosendaal"
+  },
+  "description": "Claude Code plugins by Marius Roosendaal, for designing and building Figma plugins.",
+  "plugins": [
+    {
+      "name": "figma-plugin-kit",
+      "source": "./",
+      "description": "Claude Code plugin for building Figma plugins with figma-plugin-boilerplate-svelte, figma-ui3-kit-svelte, and figma-plugin-utilities."
+    }
+  ]
+}
