@@ -2,8 +2,6 @@
 description: "figma-ui3-kit-svelte component reference — all components, icons, and design tokens. Usage: /figma-plugin-kit:components [component name]"
 ---
 
-<!-- Generated from _skills/references/figma-ui3-kit-svelte.md in the figma-plugins monorepo. Edit it there — `npm run sync-skills` overwrites this file. -->
-
 # figma-ui3-kit-svelte component reference
 
 [figma-ui3-kit-svelte](https://github.com/mariusroosendaal/figma-ui3-kit-svelte) — 39 Svelte 4 components matching Figma's UI3 design system, with light/dark theme support and 700+ icons.

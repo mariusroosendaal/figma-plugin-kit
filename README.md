@@ -85,11 +85,10 @@ Builds the screen from real UI3 component instances, from `PluginUI.svelte` or a
 
 ## Development
 
-Most skills are edited directly — there is no build step. Three are not:
-`components`, `utils` and `mockup` are generated from the package docs in the
-[figma-plugins monorepo](https://github.com/mariusroosendaal) and overwritten on
-every sync, so edit them at the source, not here. Each one says so in its own
-header.
+Skills are edited directly — there is no build step. One exception: `mockup` is
+generated in the [figma-plugins monorepo](https://github.com/mariusroosendaal)
+from its builder script and overwritten on every sync, so edit it at the source,
+not here. It says so in its own header.
 
 Validate before publishing:
 

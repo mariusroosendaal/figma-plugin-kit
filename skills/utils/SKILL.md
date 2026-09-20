@@ -2,8 +2,6 @@
 description: "figma-plugin-utilities reference — layout components, message helpers, color/validation utils, and Figma helpers. Usage: /figma-plugin-kit:utils [topic]"
 ---
 
-<!-- Generated from _skills/references/figma-plugin-utilities.md in the figma-plugins monorepo. Edit it there — `npm run sync-skills` overwrites this file. -->
-
 # figma-plugin-utilities reference
 
 [figma-plugin-utilities](https://github.com/mariusroosendaal/figma-plugin-utilities) — shared Svelte layout components and utility functions for Figma plugin UIs.
