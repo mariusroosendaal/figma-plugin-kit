@@ -11,7 +11,6 @@ Claude Code plugin for building Figma plugins with [figma-plugin-boilerplate-sve
 | Utils | `/figma-plugin-kit:utils [topic]` | figma-plugin-utilities reference |
 | Create | `/figma-plugin-kit:create` | Create plugin features — UI copy guidelines, code patterns, Figma API reference |
 | Audit | `/figma-plugin-kit:audit [Plugin Name]` | Audit a plugin for security, code quality, UX, and performance |
-| Mockup | `/figma-plugin-kit:mockup [plugin or screen]` | Build a Figma mockup of a plugin UI from real UI3 components |
 | A11y | `/figma-plugin-kit:a11y` | Accessibility review calibrated for Figma plugin UIs and the UI3 kit component set |
 
 ## Install
@@ -67,13 +66,6 @@ Claude gathers the description and Figma plugin ID, clones the boilerplate, and 
 ```
 /figma-plugin-kit:a11y
 ```
-
-**Mock a screen up in Figma:**
-```
-/figma-plugin-kit:mockup Spacing Sets
-/figma-plugin-kit:mockup a settings panel with two tabs and a footer
-```
-Builds the screen from real UI3 component instances, from `PluginUI.svelte` or a description.
 
 ## Packages
 
