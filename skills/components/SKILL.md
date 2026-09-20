@@ -494,7 +494,7 @@ Props: `size` (`"medium"` | `"small"`), `text` (or slot), `htmlFor` (renders `<l
 </Tooltip>
 ```
 
-Props: `label`, `direction` (`"Top"` | `"Bottom"` | `"Left"` | `"Right"`), `hotkey` (boolean, shows keyboard hint), `hotkeyText` (string, overrides auto-generated hotkey text), `disabled` (renders the trigger without a tooltip), `class`.
+Props: `label`, `direction` (`"Top"` | `"TopLeft"` | `"TopRight"` | `"Bottom"` | `"BottomLeft"` | `"BottomRight"` | `"Left"` | `"Right"`; the corner variants align the tooltip to that edge of the trigger, for a button at the edge of the panel), `hotkey` (boolean, shows keyboard hint), `hotkeyText` (string, overrides auto-generated hotkey text), `disabled` (renders the trigger without a tooltip), `class`.
 
 ---
 

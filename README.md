@@ -82,16 +82,3 @@ Builds the screen from real UI3 component instances, from `PluginUI.svelte` or a
 | `figma-plugin-boilerplate-svelte` | [GitHub](https://github.com/mariusroosendaal/figma-plugin-boilerplate-svelte) | Vite + Svelte 4 + TypeScript starter |
 | `figma-ui3-kit-svelte` | [GitHub](https://github.com/mariusroosendaal/figma-ui3-kit-svelte) | 39 UI3-style components, 700+ icons, design tokens |
 | `figma-plugin-utilities` | [GitHub](https://github.com/mariusroosendaal/figma-plugin-utilities) | Layout components, message helpers, color/validation utils |
-
-## Development
-
-Skills are edited directly — there is no build step. One exception: `mockup` is
-generated in the [figma-plugins monorepo](https://github.com/mariusroosendaal)
-from its builder script and overwritten on every sync, so edit it at the source,
-not here. It says so in its own header.
-
-Validate before publishing:
-
-```bash
-claude plugin validate ./
-```
