@@ -1,6 +1,6 @@
 {
   "name": "figma-plugin-kit",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Claude Code plugin for building Figma plugins with figma-plugin-boilerplate-svelte, figma-ui3-kit-svelte, and figma-plugin-utilities.",
   "author": {
     "name": "Marius Roosendaal",
