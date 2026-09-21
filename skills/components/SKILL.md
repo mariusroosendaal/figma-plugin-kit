@@ -4,7 +4,7 @@ description: "figma-ui3-kit-svelte component reference — all components, icons
 
 # figma-ui3-kit-svelte component reference
 
-[figma-ui3-kit-svelte](https://github.com/mariusroosendaal/figma-ui3-kit-svelte) — 39 Svelte 4 components matching Figma's UI3 design system, with light/dark theme support and 700+ icons.
+[figma-ui3-kit-svelte](https://github.com/mariusroosendaal/figma-ui3-kit-svelte) — 40 Svelte 4 components matching Figma's UI3 design system, with light/dark theme support and 700+ icons.
 
 If `$ARGUMENTS` names a specific component, show just that component's usage. Otherwise give the full reference.
 
@@ -34,6 +34,7 @@ import {
   IconToggle,
   Input,
   Label,
+  LinkTooltip,
   Menu,
   MenuDivider,
   MenuHeading,
@@ -126,6 +127,7 @@ figma.showUI(__html__, { themeColors: true, width: 300, height: 400 });
 <Button variant="secondary-destructive" on:click={handler}>Remove</Button>
 <Button variant="inverse">Inverse</Button>
 <Button variant="success">Done</Button>
+<Button variant="figjam">Open in FigJam</Button>
 <Button variant="link" on:click={handler}>Learn more</Button>
 <Button variant="link-danger" on:click={handler}>Delete account</Button>
 <Button variant="ghost">Ghost</Button>
@@ -135,7 +137,7 @@ figma.showUI(__html__, { themeColors: true, width: 300, height: 400 });
 <Button disabled>Unavailable</Button>
 ```
 
-Props: `variant` (`"primary"` | `"secondary"` | `"destructive"` | `"secondary-destructive"` | `"inverse"` | `"success"` | `"link"` | `"link-danger"` | `"ghost"`), `size` (`"default"` | `"large"` | `"wide"`), `iconName` (SVG import), `iconLead` (`"left"` | `"center"`, wide variant only), `label`, `disabled`, `ariaDisabled`, `ariaLabel`, `type` (`"button"` | `"submit"` | `"reset"`), `class`. Bind the element with `bind:element`.
+Props: `variant` (`"primary"` | `"secondary"` | `"destructive"` | `"secondary-destructive"` | `"inverse"` | `"success"` | `"figjam"` | `"link"` | `"link-danger"` | `"ghost"`), `size` (`"default"` | `"large"` | `"wide"`), `iconName` (SVG import), `iconLead` (`"left"` | `"center"`, wide variant only), `label`, `disabled`, `ariaDisabled`, `ariaLabel`, `type` (`"button"` | `"submit"` | `"reset"`), `class`. Bind the element with `bind:element`.
 
 `ariaDisabled` keeps the button in the tab order while blocking clicks and applying disabled styling — use it instead of `disabled` when a `<Tooltip>` needs to be keyboard-accessible (so users can focus the button and read why it's unavailable).
 
@@ -182,6 +184,8 @@ A value bound to a variable shows as a pill with a detach button, as in UI3:
 ```
 
 While bound, the pill is the field's control: it takes the field's `id` (so a `<label for>` still reaches it), stays in the tab order, and fires `variableClick` when picked — bind a new variable there. The field is not editable and does not scrub until it is detached.
+
+With `options` the field is UI3's combo input: a presets chevron at its end. A bound combo shows the pill with the chevron and no detach button; picking a preset fires `detach` before `change`, so clear the binding there.
 
 ---
 
@@ -495,6 +499,26 @@ Props: `size` (`"medium"` | `"small"`), `text` (or slot), `htmlFor` (renders `<l
 ```
 
 Props: `label`, `direction` (`"Top"` | `"TopLeft"` | `"TopRight"` | `"Bottom"` | `"BottomLeft"` | `"BottomRight"` | `"Left"` | `"Right"`; the corner variants align the tooltip to that edge of the trigger, for a button at the edge of the panel), `hotkey` (boolean, shows keyboard hint), `hotkeyText` (string, overrides auto-generated hotkey text), `disabled` (renders the trigger without a tooltip), `class`.
+
+The first tooltip waits 1s; others follow after 200ms until the pointer has been off every tooltip for a second. Keyboard focus always gets the 200ms delay. A tooltip flips to the other side when its own has no room.
+
+---
+
+### LinkTooltip
+
+UI3's link tooltip: an interactive strip against a link or a selection, with a main action and its alternatives, or a URL field. It is controlled — open it yourself; it closes on Escape, a pointerdown outside, or a scroll behind it.
+
+```svelte
+<LinkTooltip bind:open anchor={linkEl} iconName={IconLinkSmall} label="Open google.com"
+  actions={[{ label: 'Edit', value: 'edit' }]}
+  on:primary={openLink} on:action={(e) => e.detail.value === 'edit' && startEditing()} />
+
+<LinkTooltip bind:open bind:value={url} anchor={selectionRect} input on:submit={(e) => applyLink(e.detail)} />
+```
+
+Props: `open` (bindable), `anchor` (an element or a `DOMRect`, e.g. a text selection's), `direction` (`"Top"` | `"Bottom"`; flips when there's no room), `label`, `iconName`, `actions` (`{ label, value }[]`), `input` (URL field instead of actions), `value` (bindable), `placeholder`, `ariaLabel`, `class`. Events: `primary`, `action` (`{ value, label }`), `submit` (the value), `close`.
+
+Editing is yours to wire, as in UI3: on the `edit` action set `value` to the current link and `input` to true; on `submit` store it and set `input` back to false. The tooltip re-places itself as it changes size and puts the caret in the field.
 
 ---
 
