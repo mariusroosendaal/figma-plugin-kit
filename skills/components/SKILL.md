@@ -242,9 +242,9 @@ The hex field takes 3, 6 or 8 digits with or without `#`; 8 digits also set the 
 <Chit color="linear-gradient(90deg, #FF7262, #FFC700)" shape="circle" />
 ```
 
-Props: `color` (any CSS colour or gradient, or an array of colours drawn as slices), `opacity` (0–100), `image` (URL), `shape` (`"square"` | `"circle"`), `ariaLabel` (set when the colour is information), `class`.
+Props: `color` (any CSS color or gradient, or an array of colors drawn as slices), `opacity` (0–100), `image` (URL), `shape` (`"square"` | `"circle"`), `ariaLabel` (set when the color is information), `class`.
 
-A 24px cell like an icon, holding UI3's 14px square (or 16px circle). A translucent colour splits: opaque left, true alpha over the checkerboard right. No colour draws a dashed empty chit. Menu items and `ColorInput` use it.
+A 24px cell like an icon, holding UI3's 14px square (or 16px circle). A translucent color splits: opaque left, true alpha over the checkerboard right. No color draws a dashed empty chit. Menu items and `ColorInput` use it.
 
 ---
 
@@ -302,7 +302,7 @@ UI3's own Dropdown carries neither a lead chit nor a badge; the **Dropdown badge
 
 Props: `tabs` (strings or `{ label, badge?, unread? }`), `selectedTab` (0-based index), `onTabChange`, `panelIds` (for `aria-controls`), `id` (prefix for the tab ids), `class`.
 
-The counter takes its look from UI3's "Badge small alt": `unread` makes it blue (Count New) on any tab, otherwise the selected tab gets the filled grey Default and the rest Count Inactive. An unread count is also labelled "N new", since its colour is the only thing that says so.
+The counter takes its look from UI3's "Badge small alt": `unread` makes it blue (Count New) on any tab, otherwise the selected tab gets the filled grey Default and the rest Count Inactive. An unread count is also labelled "N new", since its color is the only thing that says so.
 
 ---
 
@@ -318,7 +318,7 @@ The counter takes its look from UI3's "Badge small alt": `unread` makes it blue 
 <Text variant="body-medium-strong">Bold body</Text>
 ```
 
-Props: `variant` (see above), `color` (a Figma colour token name such as `"--figma-color-text-secondary"`, or any CSS colour; default `"--figma-color-text"`), `align` (`"start"` | `"center"` | `"end"`), `block` (renders as a block), `as` (the element, default `"span"`), `text` (or slot), `class`.
+Props: `variant` (see above), `color` (a Figma color token name such as `"--figma-color-text-secondary"`, or any CSS color; default `"--figma-color-text"`), `align` (`"start"` | `"center"` | `"end"`), `block` (renders as a block), `as` (the element, default `"span"`), `text` (or slot), `class`.
 
 ---
 
@@ -645,7 +645,7 @@ Keyboard: arrows, Home/End, Enter/Space, ArrowRight/ArrowLeft for sub-menus, Esc
 <Avatar count={3} unread />
 ```
 
-Props: `name` (initial and label; also picks a stable colour), `src` (photo or org image; falls back to the initial if it fails), `color` (`"purple"` | `"blue"` | `"pink"` | `"red"` | `"yellow"` | `"green"` | `"grey"`), `size` (`"small"` 16 | `"default"` 24 | `"large"` 32), `shape` (`"circle"` | `"square"`), `count` (overflow "+N"), `unread`, `disabled`, `ariaLabel`. Menu items take `avatar: { name, color, src }`.
+Props: `name` (initial and label; also picks a stable color), `src` (photo or org image; falls back to the initial if it fails), `color` (`"purple"` | `"blue"` | `"pink"` | `"red"` | `"yellow"` | `"green"` | `"grey"`), `size` (`"small"` 16 | `"default"` 24 | `"large"` 32), `shape` (`"circle"` | `"square"`), `count` (overflow "+N"), `unread`, `disabled`, `ariaLabel`. Menu items take `avatar: { name, color, src }`.
 
 ---
 
@@ -818,4 +818,4 @@ All tokens are CSS custom properties injected by Figma (requires `themeColors: t
 --figma-color-icon-danger
 ```
 
-The kit adds static tokens Figma doesn't inject, in `global.css`: the menu's (`--color-bg-menu`, `--color-bg-menu-selected`, `--color-bg-menu-hover`, `--color-text-menu*`, `--color-border-menu`) and the multiplayer colours avatars use (`--color-multiplayer-purple` … `-grey`, `--color-text-on-multiplayer`, `--color-text-on-multiplayer-yellow`).
+The kit adds static tokens Figma doesn't inject, in `global.css`: the menu's (`--color-bg-menu`, `--color-bg-menu-selected`, `--color-bg-menu-hover`, `--color-text-menu*`, `--color-border-menu`) and the multiplayer colors avatars use (`--color-multiplayer-purple` … `-grey`, `--color-text-on-multiplayer`, `--color-text-on-multiplayer-yellow`).

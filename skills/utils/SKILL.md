@@ -501,7 +501,7 @@ const settings = await loadFromStorage("settings", { width: 300, includeAll: fal
 
 ## Spec frame builders (code.ts only)
 
-Typed builders for the frames a spec or documentation generator draws on the canvas — auto-layout frames, text, token chips, colour swatches and table cells — with a light and a dark palette. Every builder that can return either takes `as: "component"` to produce a `ComponentNode` instead of a `FrameNode`.
+Typed builders for the frames a spec or documentation generator draws on the canvas — auto-layout frames, text, token chips, color swatches and table cells — with a light and a dark palette. Every builder that can return either takes `as: "component"` to produce a `ComponentNode` instead of a `FrameNode`.
 
 ```typescript
 import {
@@ -539,7 +539,7 @@ row.appendChild(createTokenChip({ label: "#FFFFFF", background: theme.chipBg, te
 row.appendChild(createColorSwatch({ color: specTokens.accentColors.blue, size: 40, inverse: true }));
 
 const cell = createTableCell({ variant: "token", theme, text: "Background", chipLabel: "#FFFFFF", swatch: true });
-const header = createTableHeader({ variant: "header", theme, title: "Colour" });
+const header = createTableHeader({ variant: "header", theme, title: "Color" });
 ```
 
 `specTokens` carries `accentColors` (`green`, `blue`, `purple`, `red`, annotated with their WCAG grade), `fonts` and `themes` (`light`, `dark`; `headerBorder` is set on `light` only). The builders mirror the Vitrine spec library's layer names — a chip is `label` with a `label` text layer, a token cell holds it in a `tokens` row, and both header variants name their text `title` — so lookups work on library instances and fallbacks alike. Types exported alongside: `PaddingSpec`, `SpecTheme`, `NodeKind`, `NodeFor`.
