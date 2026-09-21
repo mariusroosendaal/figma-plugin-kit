@@ -530,8 +530,8 @@ row.appendChild(createText({
   characters: "color/bg/default",
   font: specTokens.fonts.code,   // body | bodyBold | subheading | heading | code
   color: theme.text,
-  lineHeight: 1.3,               // a multiplier, not px
-  letterSpacing: 0.1875,
+  lineHeight: 1.4,               // a multiplier, not px
+  letterSpacing: 0.18,           // px
   width: 240,                    // sets textAutoResize to HEIGHT
 }));
 
@@ -542,6 +542,6 @@ const cell = createTableCell({ variant: "token", theme, text: "Background", chip
 const header = createTableHeader({ variant: "header", theme, title: "Colour" });
 ```
 
-`specTokens` carries `accentColors` (`green`, `blue`, `purple`, `red`, annotated with their WCAG grade), `fonts` and `themes` (`light`, `dark`). Types exported alongside: `PaddingSpec`, `SpecTheme`, `NodeKind`, `NodeFor`.
+`specTokens` carries `accentColors` (`green`, `blue`, `purple`, `red`, annotated with their WCAG grade), `fonts` and `themes` (`light`, `dark`; `headerBorder` is set on `light` only). The builders mirror the Vitrine spec library's layer names — a chip is `label` with a `label` text layer, a token cell holds it in a `tokens` row, and both header variants name their text `title` — so lookups work on library instances and fallbacks alike. Types exported alongside: `PaddingSpec`, `SpecTheme`, `NodeKind`, `NodeFor`.
 
 `createTableCell` takes `variant` (`"text"` | `"header"` | `"token"`), `theme`, `text`, `chipLabel`, `chipBackground`, `swatch`, `swatchColor`, `chipSource` and `swatchSource` (instance an existing component instead of building one), `width`, `height`, `textSizing` (`"fill"` | `"hug"`). `createTableHeader` takes `variant` (`"header"` | `"subheader"`), `theme`, `title`, `width`, `height`.
