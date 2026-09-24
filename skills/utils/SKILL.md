@@ -412,7 +412,7 @@ figma.ui.onmessage = (msg) => {
 
 - `setDefaultWidth(width)` — set the default width used for all resize calls
 - `getContentHeight(container)` — measure element's `scrollHeight`
-- `resizeToFit(options?)` — one-shot resize: `{ width, height, minHeight, maxHeight, padding, container }`
+- `resizeToFit(options?)` — one-shot resize: `{ width, height, minHeight, maxHeight, padding, container }`. Pass `container`: the default, `document.body`, fills the window (the kit sets `html, body, #app { height: 100% }`), so it measures the window rather than the content
 - `autoResize(options)` — watch a container via `ResizeObserver`, returns a cleanup function: `{ container, width, minHeight, maxHeight, padding, debounce, threshold }`
 
 ---
