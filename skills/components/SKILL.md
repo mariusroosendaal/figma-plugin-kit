@@ -444,6 +444,7 @@ Props: `value`, `min`, `max`, `step`, `variant` (`"range"` | `"delta"` | `"stepp
 <Badge variant="count-inactive" text="21" />
 <Badge size="large" strong text="Draft" />
 <Badge dot ariaLabel="Unread" />
+<Badge dot variant="warning" />              <!-- danger, success and warning color the dot; anything else is brand -->
 ```
 
 Props: `variant` (`"default"` | `"brand"` | `"component"` | `"danger"` | `"success"` | `"warning"` | `"invert"` | `"selected"` | `"variable"` | `"variable-selected"` | `"feedback"` | `"merged"` | `"archived"` | `"menu"` | `"figjam"` | `"count"` | `"count-inactive"`), `strong`, `size` (`"small"` | `"large"`), `dot`, `text`, `iconName`, `ariaLabel`.
