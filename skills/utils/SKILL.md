@@ -20,7 +20,7 @@ npm install figma-plugin-utilities
 // UI components + utilities
 import {
   PluginLayout, Header, Footer, StatusBar,
-  EmptyState, ListItem, LoadingState, FieldGroup, CheckboxCard,
+  EmptyState, ListItem, LoadingState, FieldGroup, CheckboxCard, ValueTable,
   sendToPlugin, createMessageHandler,
   rgbToHex, hexToRgb, getLuminance, getContrastRatio, meetsContrastLevel,
   validateUrl, validateJsonString, sanitizeInput, sanitizeName,
@@ -241,6 +241,51 @@ Large checkbox with card styling, good for multi-select option lists.
 ```
 
 Props: `checked`, `disabled`. Slot: `secondary` (optional sub-label). Events: `change` (with `{ checked }`).
+
+---
+
+### ValueTable
+
+Named rows with a value per column — a set's size at each breakpoint. Each row is a button named by its `label`; selecting it opens the `editor` slot under it.
+
+```svelte
+<script>
+  let selectedKey = null;
+  $: rows = sets.map((set) => ({
+    key: set.name,
+    name: set.name,
+    label: `${set.name}: ${set.values.join(", ")}`,
+    cells: set.values.map((v, b) => ({
+      text: v,
+      tone: changed[b] ? "changed" : null,
+      title: changed[b] ? `was ${before[b]}` : null,
+    })),
+    set,
+  }));
+</script>
+
+<ValueTable
+  columns={["sm", "md", "lg"]}
+  {rows}
+  {selectedKey}
+  legend={[{ label: "Changed", variant: "warning" }]}
+  on:select={(e) => (selectedKey = e.detail.key)}
+>
+  <svelte:fragment slot="badges" let:row>
+    {#if row.set.offset}<Badge text="+{row.set.offset} steps" />{/if}
+  </svelte:fragment>
+  <svelte:fragment slot="action" let:row>
+    <IconButton iconName={IconMinus} ariaLabel="Remove {row.name}" on:click={() => remove(row.key)} />
+  </svelte:fragment>
+  <svelte:fragment slot="editor" let:row>
+    <SetEditor set={row.set} />
+  </svelte:fragment>
+</ValueTable>
+```
+
+Props: `columns` (strings, or `{ label, title }`), `rows`, `nameLabel` (default `"Name"`), `selectedKey`, `active` (a column index to mark), `selectableColumns` (headers become buttons named "Show {label}"), `legend` (`{ label, variant }` for `Badge` dots), `class`.
+A row is `{ key, name, label, cells, tone?, removed? }` plus anything the slots need; `tone: "new"` colors the name. A cell is `{ text, tone?, title? }`, `tone` being `"new"`, `"changed"` or `"muted"`. Removed rows are colored danger and can't be selected; their `action` slot still renders, for a restore button.
+Slots: `badges`, `action` and `editor` (each with `row`), `note` (between the table and the legend). Events: `select` (the row), `column` (the index).
 
 ---
 
