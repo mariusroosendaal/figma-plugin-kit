@@ -21,6 +21,7 @@ npm install figma-plugin-utilities
 import {
   PluginLayout, Header, Footer, StatusBar,
   EmptyState, ListItem, LoadingState, FieldGroup, CheckboxCard, Section, DataTable,
+  FieldGrid, SteppedField, LadderBadges, CodeExportModal,
   sendToPlugin, createMessageHandler,
   rgbToHex, hexToRgb, getLuminance, getContrastRatio, meetsContrastLevel,
   validateUrl, validateJsonString, sanitizeInput, sanitizeName,
@@ -325,6 +326,85 @@ Slots: `action` and `editor` (each with `row`), `note` (under the table). Events
   ariaLabel="Styles to write"
 />
 ```
+
+---
+
+### FieldGrid
+
+Fields side by side in equal columns. Tracks are `minmax(0, 1fr)`, so fields shrink below their content in a narrow panel.
+
+```svelte
+<FieldGrid columns={3}>
+  <FieldGroup label="Base">…</FieldGroup>
+  <FieldGroup label="Ratio">…</FieldGroup>
+  <FieldGroup label="Steps">…</FieldGroup>
+</FieldGrid>
+```
+
+Props: `columns` (default 2). Slot: default.
+
+---
+
+### SteppedField
+
+A field with − and + icon buttons after it, as one cell of the caller's grid (the field grows, the buttons keep their size, bottoms aligned).
+
+```svelte
+<SteppedField
+  downLabel="Step {set.name} down"
+  upLabel="Step {set.name} up"
+  on:step={(e) => dispatch("offset", set.offset + e.detail)}
+>
+  <FieldGroup label="Steps off the curve" labelFor="offset-{set.name}" size="small">
+    <NumericInput value={set.offset} id="offset-{set.name}" precision={0} />
+  </FieldGroup>
+</SteppedField>
+```
+
+Props: `downLabel`, `upLabel` (the buttons' `ariaLabel`s — name the row, so each row's are unique). Slot: default (the field). Events: `step` (-1 or 1; what a step means is the caller's).
+
+---
+
+### LadderBadges
+
+A scale's sizes as neutral badges: outlined (`default`) where something uses the size, `archived` where nothing does. The caller words each badge's title.
+
+```svelte
+<LadderBadges
+  ariaLabel="Spacing scale sizes in pixels"
+  badges={ladder.map((rung) => ({
+    value: rung.value,
+    used: used.has(rung.value),
+    title: used.has(rung.value) ? "Used by a set" : "Not used by a set",
+  }))}
+/>
+```
+
+Props: `badges` (`{ value, used, title }[]`, keyed by index, so values may repeat), `ariaLabel` (names the group). Each badge is named `"{value}px, used"` or `"{value}px, unused"`. No margin of its own.
+
+---
+
+### CodeExportModal
+
+Read-only code in a `Modal` with a primary copy button in the footer. The button reads "Copied" for two seconds after a copy, per modal, and resets when the modal reopens. It copies with `execCommand("copy")`, since the plugin iframe isn't granted clipboard-write.
+
+```svelte
+<CodeExportModal
+  isOpen={cssOpen}
+  title="Export CSS"
+  value={css}
+  ariaLabel="Exported CSS"
+  copyLabel="Copy CSS"
+  onClose={() => (cssOpen = false)}
+>
+  <div slot="controls" class="css-controls">
+    <SegmentedControl bind:value={unit} ariaLabel="CSS unit">…</SegmentedControl>
+  </div>
+</CodeExportModal>
+```
+
+Props: `isOpen`, `title`, `value`, `ariaLabel` (names the code), `copyLabel` (verb + noun, e.g. "Copy JSON"), `position` (default `"bottom"`), `width` (`"medium"`), `height` (`"auto"`), `onClose`. Slot: `controls` (optional, above the code). The code fills the modal's height.
+
 ---
 
 ## Message utilities
