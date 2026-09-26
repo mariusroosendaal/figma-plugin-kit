@@ -582,6 +582,30 @@ const settings = await loadFromStorage("settings", { width: 300, includeAll: fal
 
 ---
 
+## Scale math (`lib/scale`, both threads)
+
+Pure math for plugins that shape a scale across breakpoints (Type Tools, Spacing Sets): no Figma API, so the sandbox and the UI may both import it — the plugin must then build each thread in its own Vite pass (`vite build && vite build --mode code`), or the shared module becomes a chunk `code.js` can't load. Units are the caller's (px, ladder rungs…); nothing here maps values onto a ladder.
+
+```typescript
+import {
+  bezier, clampPosition, levelT, lerp, roundHalfDown,
+  blendAt, valueAtWidth, FALLBACK_WIDTHS, isBreakpointName, widthsFor,
+  fluidClamp, trimNumber,
+} from "figma-plugin-utilities/lib/scale";
+
+const widths = widthsFor(["sm", "md", "lg"], { sm: 375 }); // [375, 768, 1024]
+const t = blendAt(1, widths.length, widths);                // 0…1 by viewport width
+const size = valueAtWidth(widths, [16, 18, 24], 900);        // straight between, held beyond
+const css = fluidClamp(16, 24, 375, 1024, (px) => `${trimNumber(px / 16)}rem`);
+```
+
+- `bezier(t, p0, p1, p2)`, `clampPosition(c)` (0.02–0.98), `levelT(x, c)` — the ramp's quadratic Bézier, its bend position, and t for a point at x with the bend at c
+- `blendAt(index, count, widths?)` — a breakpoint's place 0…1, by width when all are known and widen, else by position
+- `valueAtWidth(widths, values, width, stepped?)` — straight between breakpoints (fluid) or the last one at or below (stepped), held beyond the ends
+- `FALLBACK_WIDTHS`, `isBreakpointName(name)`, `widthsFor(names, known)` — widths by breakpoint name when a file has none; out of order or unknown, 400px past the one before
+- `fluidClamp(from, to, w0, w1, length)` — a linear `clamp()` over vw, or `length(from)` when constant; `trimNumber(n, places)` writes numbers without trailing zeros
+- `lerp`, `roundHalfDown` (halves round down: 16 16 18 18 20)
+
 ## Spec frame builders (code.ts only)
 
 Typed builders for the frames a spec or documentation generator draws on the canvas — auto-layout frames, text, token chips, color swatches and table cells — with a light and a dark palette. Every builder that can return either takes `as: "component"` to produce a `ComponentNode` instead of a `FrameNode`.
