@@ -283,8 +283,8 @@ Named rows with a value per column — a set's size at each breakpoint. Each row
 </ValueTable>
 ```
 
-Props: `columns` (strings, or `{ label, title }`), `rows`, `nameLabel` (default `"Name"`), `selectedKey`, `active` (a column index to mark), `selectableColumns` (headers become buttons named "Show {label}"), `legend` (`{ label, variant }` for `Badge` dots), `class`.
-A row is `{ key, name, label, cells, tone?, removed? }` plus anything the slots need; `tone: "new"` colors the name. A cell is `{ text, tone?, title? }`, `tone` being `"new"`, `"changed"` or `"muted"`. Removed rows are colored danger and can't be selected; their `action` slot still renders, for a restore button.
+Props: `columns` (strings, or `{ label, title }`), `rows`, `nameLabel` (default `"Name"`), `selectedKey`, `active` (a column index to mark), `selectableColumns` (headers become buttons named "Show {label}"), `legend` (`{ label, variant }` for `Badge` dots), `inset` (the container's side padding, e.g. `"var(--size-xsmall)"`: rows, their borders and hover run edge to edge through it, their contents still aligned with the container's), `class`. The `editor` slot is wrapped with the row's bottom border, so an editor shouldn't draw its own.
+A row is `{ key, name, label, cells, tone?, removed? }` plus anything the slots need; `tone: "new"` colors the name. A cell is `{ text, tone?, title?, alias? }`, `tone` being `"new"`, `"changed"` or `"muted"`. A cell shows as a `Badge` (success when new, warning when changed, danger in a removed row), or as a `VariablePill` when `alias` names the variable it aliases; set `alias` only for values that will be aliased, not for raw ones such as fluid values between a scale's steps. Muted cells are plain text. Removed rows are colored danger and can't be selected; their `action` slot still renders, for a restore button.
 Slots: `badges`, `action` and `editor` (each with `row`), `note` (between the table and the legend). Events: `select` (the row), `column` (the index).
 
 ---
