@@ -409,7 +409,7 @@ Props: `isOpen`, `title`, `value`, `ariaLabel` (names the code), `copyLabel` (ve
 
 ### RampCurve
 
-A ramp's quadratic Bézier at the breakpoint shown, the other breakpoints' curves faint behind it, as Type Tools' heading ramp and Spacing Sets' "Shape the scale" draw it. The y axis is in the caller's units — px along a type ladder, rungs of a spacing one — so the caller works out the curves, grid and dots and says how a y value snaps to a rung. At the smallest and largest breakpoint the bottom, bend and top are sliders (dragged, or arrow keys: ends by a rung, the bend by 0.02 up/down and along x left/right); between them the chart says "Calculated from the endpoints." with a link to edit each end.
+A ramp's quadratic Bézier at the breakpoint shown, the other breakpoints' curves faint behind it, as Vitrine Tools' heading ramp (Type tab) and "Shape the scale" (Spacing tab) draw it. The y axis is in the caller's units — px along a type ladder, rungs of a spacing one — so the caller works out the curves, grid and dots and says how a y value snaps to a rung. At the smallest and largest breakpoint the bottom, bend and top are sliders (dragged, or arrow keys: ends by a rung, the bend by 0.02 up/down and along x left/right); between them the chart says "Calculated from the endpoints." with a link to edit each end.
 
 ```svelte
 <RampCurve
@@ -692,7 +692,7 @@ const settings = await loadFromStorage("settings", { width: 300, includeAll: fal
 
 ## Scale math (`lib/scale`, both threads)
 
-Pure math for plugins that shape a scale across breakpoints (Type Tools, Spacing Sets): no Figma API, so the sandbox and the UI may both import it — the plugin must then build each thread in its own Vite pass (`vite build && vite build --mode code`), or the shared module becomes a chunk `code.js` can't load. Units are the caller's (px, ladder rungs…); nothing here maps values onto a ladder.
+Pure math for plugins that shape a scale across breakpoints (Vitrine Tools' Type and Spacing tabs): no Figma API, so the sandbox and the UI may both import it — the plugin must then build each thread in its own Vite pass (`vite build && vite build --mode code`), or the shared module becomes a chunk `code.js` can't load. Units are the caller's (px, ladder rungs…); nothing here maps values onto a ladder.
 
 ```typescript
 import {
