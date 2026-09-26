@@ -21,7 +21,7 @@ npm install figma-plugin-utilities
 import {
   PluginLayout, Header, Footer, StatusBar,
   EmptyState, ListItem, LoadingState, FieldGroup, CheckboxCard, Section, DataTable,
-  FieldGrid, SteppedField, LadderBadges, CodeExportModal,
+  FieldGrid, SteppedField, LadderBadges, CodeExportModal, RampCurve,
   sendToPlugin, createMessageHandler,
   rgbToHex, hexToRgb, getLuminance, getContrastRatio, meetsContrastLevel,
   validateUrl, validateJsonString, sanitizeInput, sanitizeName,
@@ -404,6 +404,34 @@ Read-only code in a `Modal` with a primary copy button in the footer. The button
 ```
 
 Props: `isOpen`, `title`, `value`, `ariaLabel` (names the code), `copyLabel` (verb + noun, e.g. "Copy JSON"), `position` (default `"bottom"`), `width` (`"medium"`), `height` (`"auto"`), `onClose`. Slot: `controls` (optional, above the code). The code fills the modal's height.
+
+---
+
+### RampCurve
+
+A ramp's quadratic Bézier at the breakpoint shown, the other breakpoints' curves faint behind it, as Type Tools' heading ramp and Spacing Sets' "Shape the scale" draw it. The y axis is in the caller's units — px along a type ladder, rungs of a spacing one — so the caller works out the curves, grid and dots and says how a y value snaps to a rung. At the smallest and largest breakpoint the bottom, bend and top are sliders (dragged, or arrow keys: ends by a rung, the bend by 0.02 up/down and along x left/right); between them the chart says "Calculated from the endpoints." with a link to edit each end.
+
+```svelte
+<RampCurve
+  ramp={rampCurve}
+  curves={breakpoints.map((_, b) => rampAt(rampCurve, breakpoints, b))}
+  span={[Math.min(0, ...all) - 0.5, Math.max(...all) + 0.5]}
+  grid={ladder.map((r, rung) => ({ key: rung, y: rung, label: r.value }))}
+  dots={sets.map((set, k) => ({ key: set.name, x: k / (sets.length - 1), y: rungOfValue(ladder, set.values[shown]), marked: set.name === open }))}
+  breakpoints={breakpoints.map((b) => b.name)}
+  selected={shown}
+  rungCount={ladder.length}
+  format={(r) => `${ladder[Math.round(r)].value}px`}
+  ariaLabel="Spacing ramp"
+  bottomLabel="First set"
+  topLabel="Last set"
+  along="sets"
+  on:change={(e) => (rampCurve = { ...rampCurve, ...e.detail })}
+  on:select={(e) => (shown = e.detail)}
+/>
+```
+
+Props: `ramp` (`bottomSm`, `topSm`, `bottomLg`, `topLg` as rungs, `bendSm`, `bendLg` from -0.5 to 1.5, `bendPosition` along x), `curves` (each breakpoint's `[P0, P1, P2]`), `span` (`[lo, hi]` shown; held still while dragging), `grid` (`{ key, y, label }`, labels thinned to 10px apart), `dots` (`{ key, x, y, marked? }`, x from 0 to 1), `breakpoints` (names), `selected`, `rungCount`, `rungAt` (y → rung, identity by default — pass `nearestRung` for px), `format` (an end's slider text), `ariaLabel` (the chart's name; "at {breakpoint}" follows), `bottomLabel`, `topLabel`, `along` (what x runs along, for the bend's text). Events: `change` (a patch of those `ramp` keys), `select` (a breakpoint index). Work the coordinates out in `$:` statements, not in markup helpers, so they re-run.
 
 ---
 
