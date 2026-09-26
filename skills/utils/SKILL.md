@@ -260,6 +260,7 @@ Named rows with a value per column — a set's size at each breakpoint. Each row
       tone: changed[b] ? "changed" : null,
       title: changed[b] ? `was ${before[b]}` : null,
     })),
+    badges: set.offset ? [{ text: `+${set.offset} steps` }] : [],
     set,
   }));
 </script>
@@ -271,9 +272,6 @@ Named rows with a value per column — a set's size at each breakpoint. Each row
   legend={[{ label: "Changed", variant: "warning" }]}
   on:select={(e) => (selectedKey = e.detail.key)}
 >
-  <svelte:fragment slot="badges" let:row>
-    {#if row.set.offset}<Badge text="+{row.set.offset} steps" />{/if}
-  </svelte:fragment>
   <svelte:fragment slot="action" let:row>
     <IconButton iconName={IconMinus} ariaLabel="Remove {row.name}" on:click={() => remove(row.key)} />
   </svelte:fragment>
@@ -283,9 +281,9 @@ Named rows with a value per column — a set's size at each breakpoint. Each row
 </ValueTable>
 ```
 
-Props: `columns` (strings, or `{ label, title }`), `rows`, `nameLabel` (default `"Name"`), `selectedKey`, `active` (a column index to mark), `selectableColumns` (headers become buttons named "Show {label}"), `legend` (`{ label, variant }` for `Badge` dots), `inset` (the container's side padding, e.g. `"var(--size-xsmall)"`: rows, their borders and hover run edge to edge through it, their contents still aligned with the container's), `class`. The `editor` slot is wrapped with the row's bottom border, so an editor shouldn't draw its own.
-A row is `{ key, name, label, cells, tone?, removed? }` plus anything the slots need; `tone: "new"` colors the name. A cell is `{ text, tone?, title?, alias? }`, `tone` being `"new"`, `"changed"` or `"muted"`. A cell shows as a `Badge` (success when new, warning when changed, danger in a removed row), or as a `VariablePill` when `alias` names the variable it aliases; set `alias` only for values that will be aliased, not for raw ones such as fluid values between a scale's steps. Muted cells are plain text. Removed rows are colored danger and can't be selected; their `action` slot still renders, for a restore button.
-Slots: `badges`, `action` and `editor` (each with `row`), `note` (between the table and the legend). Events: `select` (the row), `column` (the index).
+Props: `columns` (strings, or `{ label, title }`), `rows`, `nameLabel` (default `"Name"`), `selectedKey`, `active` (a column index to mark), `selectableColumns` (headers become buttons named "Show {label}"), `legend` (`{ label, variant }` for `Badge` dots), `inset` (the container's side padding, e.g. `"var(--size-xsmall)"`: rows, their borders and hover run edge to edge through it, their contents still aligned with the container's), `maxBadges` (default 2), `class`. The `editor` slot is wrapped with the row's bottom border, so an editor shouldn't draw its own.
+A row is `{ key, name, label, cells, tone?, removed?, badges? }` plus anything the slots need; `tone: "new"` colors the name. `badges` are `{ text, variant? }` notes after the name: the first `maxBadges` show, and the rest fold into a `+N` badge whose title lists them. A cell is `{ text, tone?, title?, alias? }`, `tone` being `"new"`, `"changed"` or `"muted"`. A cell shows as a `Badge` (success when new, warning when changed, danger in a removed row), or as a `VariablePill` when `alias` names the variable it aliases; set `alias` only for values that will be aliased, not for raw ones such as fluid values between a scale's steps. Muted cells are plain text. Removed rows are colored danger and can't be selected; their `action` slot still renders, for a restore button.
+Slots: `action` and `editor` (each with `row`), `note` (between the table and the legend). Events: `select` (the row), `column` (the index).
 
 ---
 
