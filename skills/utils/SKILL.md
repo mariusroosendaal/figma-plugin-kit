@@ -20,7 +20,7 @@ npm install figma-plugin-utilities
 // UI components + utilities
 import {
   PluginLayout, Header, Footer, StatusBar,
-  EmptyState, ListItem, LoadingState, FieldGroup, CheckboxCard, ValueTable,
+  EmptyState, ListItem, LoadingState, FieldGroup, CheckboxCard, Section, DataTable,
   sendToPlugin, createMessageHandler,
   rgbToHex, hexToRgb, getLuminance, getContrastRatio, meetsContrastLevel,
   validateUrl, validateJsonString, sanitizeInput, sanitizeName,
@@ -244,9 +244,30 @@ Props: `checked`, `disabled`. Slot: `secondary` (optional sub-label). Events: `c
 
 ---
 
-### ValueTable
+### Section
 
-Named rows with a value per column — a set's size at each breakpoint. Each row is a button named by its `label`; selecting it opens the `editor` slot under it.
+A titled group of fields, as in Figma's panels: a fieldset headed by `Header`, its title strong on the left and icon buttons on the right.
+
+```svelte
+<div class="controls">  <!-- no padding: sections pad themselves -->
+  <Section title="Spacing scale">
+    <svelte:fragment slot="actions">
+      <IconButton iconName={IconAdjust} ariaLabel="Edit breakpoints" on:click={openSetup} />
+    </svelte:fragment>
+    <FieldGroup label="Number of sets">…</FieldGroup>
+  </Section>
+  <hr />
+  <Section title="Responsive spacing">…</Section>
+</div>
+```
+
+Props: `title`. Slots: default (the fields, in a column with an 8px gap), `actions`. It pads its content 16px at the sides and bottom and its header runs edge to edge, so its container must not be padded; rule sections apart with an `<hr>` at `margin: 0`.
+
+---
+
+### DataTable
+
+Named rows with a cell per column, laid out as a table — a set's size at each breakpoint, or a style's size and line height before and after an update. Selectable (the default), each row is a button named by its `label`, and selecting it opens the `editor` slot under it; `selectable={false}` makes a read-only table with table roles, for a review.
 
 ```svelte
 <script>
@@ -265,11 +286,10 @@ Named rows with a value per column — a set's size at each breakpoint. Each row
   }));
 </script>
 
-<ValueTable
+<DataTable
   columns={["sm", "md", "lg"]}
   {rows}
   {selectedKey}
-  legend={[{ label: "Changed", variant: "warning" }]}
   on:select={(e) => (selectedKey = e.detail.key)}
 >
   <svelte:fragment slot="action" let:row>
@@ -278,13 +298,33 @@ Named rows with a value per column — a set's size at each breakpoint. Each row
   <svelte:fragment slot="editor" let:row>
     <SetEditor set={row.set} />
   </svelte:fragment>
-</ValueTable>
+</DataTable>
 ```
 
-Props: `columns` (strings, or `{ label, title }`), `rows`, `nameLabel` (default `"Name"`), `selectedKey`, `active` (a column index to mark), `selectableColumns` (headers become buttons named "Show {label}"), `legend` (`{ label, variant }` for `Badge` dots), `inset` (the container's side padding, e.g. `"var(--size-xsmall)"`: rows, their borders and hover run edge to edge through it, their contents still aligned with the container's), `maxBadges` (default 2), `class`. The `editor` slot is wrapped with the row's bottom border, so an editor shouldn't draw its own.
-A row is `{ key, name, label, cells, tone?, removed?, badges? }` plus anything the slots need; `tone: "new"` colors the name. `badges` are `{ text, variant? }` notes after the name: the first `maxBadges` show, and the rest fold into a `+N` badge whose title lists them. A cell is `{ text, tone?, title?, alias? }`, `tone` being `"new"`, `"changed"` or `"muted"`. A cell shows as a `Badge` (success when new, warning when changed, danger in a removed row), or as a `VariablePill` when `alias` names the variable it aliases; set `alias` only for values that will be aliased, not for raw ones such as fluid values between a scale's steps. Muted cells are plain text. Removed rows are colored danger and can't be selected; their `action` slot still renders, for a restore button.
-Slots: `action` and `editor` (each with `row`), `note` (between the table and the legend). Events: `select` (the row), `column` (the index).
+Props: `columns` (strings, or `{ label, title?, width?, align? }` — `width` a grid track, `2.75rem` by default; `align` `"end"` by default, `"start"` for text), `rows`, `nameLabel` (default `"Name"`), `selectable` (default `true`), `selectedKey`, `active` (a column index to mark), `selectableColumns` (headers become buttons named "Show {label}"), `inset` (the container's side padding, e.g. `"var(--size-xsmall)"` — a modal's content too: rows, their borders and hover run edge to edge through it, their contents still aligned with the container's), `maxBadges` (default 2), `ariaLabel` (names a read-only table), `class`. The `editor` slot is wrapped with the row's bottom border, so an editor shouldn't draw its own.
+A row is `{ key, name, label?, cells, tone?, removed?, badges? }` plus anything the slots need; `label` names a selectable row's button, `tone: "new"` colors the name. `badges` are `{ text, variant? }` notes after the name: the first `maxBadges` show, and the rest fold into a `+N` badge whose title lists them.
+A cell is `{ text, tone?, title?, alias?, plain? }`, `tone` being `"new"`, `"changed"` or `"muted"`. A cell shows as a `Badge` (success when new, warning when changed, danger in a removed row), as a `VariablePill` when `alias` names the variable it aliases — set it only for values that will be aliased, not raw ones such as fluid values between a scale's steps — or as text when `plain` (colored by its tone, e.g. `"16 → 18"` changed). Muted cells are plain secondary text. Removed rows are colored danger and can't be selected; their `action` slot still renders, for a restore button.
+Slots: `action` and `editor` (each with `row`), `note` (under the table). Events: `select` (the row), `column` (the index).
 
+```svelte
+<!-- A review: read-only, text cells, only the columns something writes. -->
+<DataTable
+  columns={[{ label: "Size", width: "4.5rem" }, { label: "Line height", width: "6rem" }]}
+  rows={changes.map((c) => ({
+    key: c.id,
+    name: c.name,
+    badges: [{ text: "update", variant: "warning" }],
+    cells: [
+      { text: `${c.fromSize} → ${c.size}`, tone: "changed", plain: true },
+      { text: c.lineHeight, plain: true },
+    ],
+  }))}
+  nameLabel="Style"
+  selectable={false}
+  inset="var(--size-xsmall)"
+  ariaLabel="Styles to write"
+/>
+```
 ---
 
 ## Message utilities
