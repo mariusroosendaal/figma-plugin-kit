@@ -173,7 +173,7 @@ Props: `value`, `placeholder`, `rows`, `disabled`, `readonly`, `id`, `name`, `va
 <NumericInput value={null} placeholder="Mixed" label="W" />
 ```
 
-Props: `value` (number, or `null` for the placeholder), `min`, `max`, `step`, `precision` (decimals kept; default 2), `label` (lead letter), `iconName` (lead icon), `unit`, `placeholder`, `options` (numbers or `{ label, value }`; adds a presets chevron), `disabled`, `id`, `name`, `ariaLabel`, `variable` (see below). Events: `change` (committed value), `input` (while scrubbing), `detach` and `variableClick` (both bound-only, with the variable name).
+Props: `value` (number, or `null` for the placeholder), `min`, `max`, `step`, `precision` (decimals kept; default 2), `label` (lead letter), `iconName` (lead icon), `unit`, `placeholder`, `options` (numbers or `{ label, value }`; adds a presets chevron), `disabled`, `invalid` (a red edge and `aria-invalid`, for a value a problem shown elsewhere is about), `id`, `name`, `ariaLabel`, `variable` (see below). Events: `change` (committed value), `input` (while scrubbing), `detach` and `variableClick` (both bound-only, with the variable name).
 
 Dragging the lead scrubs the value, a step per pixel (Shift ×10) once the drag passes 3px, so a click still focuses the field; ArrowUp/ArrowDown step it (Shift ×10); Enter commits, Escape reverts. Typed arithmetic works (`24*2`); anything unreadable reverts. Values commit on Enter, blur or a step — not on every keystroke. A value the parent sets in answer to `change` (snapping to a preset, say) shows at once, focus or not, and the next step starts from it.
 
@@ -277,7 +277,7 @@ A lead, and a badge before the chevron:
 />
 ```
 
-Props: `menuItems` (array of `{ label, value }`; takes Menu's item fields — a chosen item's `iconName` or `chit` shows in the button), `value`, `placeholder`, `disabled`, `iconName`, `chit` (a lead chit when no chosen item carries one; wins over `iconName`), `label` (button text when it should not be the chosen item's menu label — a menu row can carry more than the button has room for; `""` shows the placeholder whatever is chosen), `badge` and `badgeVariant` (the kit Badge's `text` and `variant`), `size` (`"default"` | `"large"`), `stroke` (`false`: no border until hovered), `showGroupLabels`, `searchable`, `searchPlaceholder`, `ariaLabel`, `class`. Events: `change` (the chosen item).
+Props: `menuItems` (array of `{ label, value }`; takes Menu's item fields — a chosen item's `iconName` or `chit` shows in the button), `value`, `placeholder`, `disabled`, `iconName`, `chit` (a lead chit when no chosen item carries one; wins over `iconName`), `label` (button text when it should not be the chosen item's menu label — a menu row can carry more than the button has room for; `""` shows the placeholder whatever is chosen), `badge` and `badgeVariant` (the kit Badge's `text` and `variant`; `badge` also takes a list of texts and `{ text, variant?, strong? }` for several, each falling back to `badgeVariant`), `size` (`"default"` | `"large"`), `stroke` (`false`: no border until hovered), `showGroupLabels`, `searchable`, `searchPlaceholder`, `ariaLabel`, `class`. Events: `change` (the chosen item).
 
 Without `ariaLabel` the button is named by what it shows, badge included — set it only when that isn't enough.
 
@@ -613,7 +613,7 @@ Menu is data-driven: pass `menuItems` and anchor it to its trigger.
 <Menu bind:isOpen bind:menuItems anchorElement={trigger} on:select={(e) => run(e.detail.value)} />
 ```
 
-Item fields: `label`, `value`, `group` (a change draws a divider), `showHeading` (label the group), `section` (dividers by section instead of group), `disabled`, `iconName`, `chit` or `avatar` (lead), `detail` (right-aligned shortcut or count), `badge`, `subMenu`, and:
+Item fields: `label`, `value`, `group` (a change draws a divider), `showHeading` (label the group), `section` (dividers by section instead of group), `disabled`, `iconName`, `chit` or `avatar` (lead), `detail` (right-aligned shortcut or count), `badge` (text, or a list of texts and `{ text, variant?, strong? }` for several), `subMenu`, and:
 
 - `type: "check"` — leading checkmark, flips `checked` (`"mixed"` draws a dot) and closes the menu.
 - `type: "checkbox"` / `"toggle"` — trailing checkbox / leading switch, flips `checked` and keeps the menu open.
