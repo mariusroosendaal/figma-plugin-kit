@@ -175,7 +175,7 @@ Props: `value`, `placeholder`, `rows`, `disabled`, `readonly`, `id`, `name`, `va
 
 Props: `value` (number, or `null` for the placeholder), `min`, `max`, `step`, `precision` (decimals kept; default 2), `label` (lead letter), `iconName` (lead icon), `unit`, `placeholder`, `options` (numbers or `{ label, value }`; adds a presets chevron), `disabled`, `id`, `name`, `ariaLabel`, `variable` (see below). Events: `change` (committed value), `input` (while scrubbing), `detach` and `variableClick` (both bound-only, with the variable name).
 
-Dragging the lead scrubs the value; ArrowUp/ArrowDown step it (Shift ×10); Enter commits, Escape reverts. Typed arithmetic works (`24*2`); anything unreadable reverts. Values commit on Enter, blur or a step — not on every keystroke. A value the parent sets in answer to `change` (snapping to a preset, say) shows at once, focus or not, and the next step starts from it.
+Dragging the lead scrubs the value, a step per pixel (Shift ×10) once the drag passes 3px, so a click still focuses the field; ArrowUp/ArrowDown step it (Shift ×10); Enter commits, Escape reverts. Typed arithmetic works (`24*2`); anything unreadable reverts. Values commit on Enter, blur or a step — not on every keystroke. A value the parent sets in answer to `change` (snapping to a preset, say) shows at once, focus or not, and the next step starts from it.
 
 A value bound to a variable shows as a pill with a detach button, as in UI3:
 
