@@ -21,7 +21,7 @@ npm install figma-plugin-utilities
 import {
   PluginLayout, Header, Footer, StatusBar,
   EmptyState, ListItem, LoadingState, FieldGroup, CheckboxCard, Section, DataTable,
-  FieldGrid, SteppedField, LadderBadges, CodeExportModal, RampCurve,
+  FieldGrid, SteppedField, LadderBadges, CodeExportModal, RampCurve, MappingChip,
   sendToPlugin, createMessageHandler,
   rgbToHex, hexToRgb, getLuminance, getContrastRatio, meetsContrastLevel,
   validateUrl, validateJsonString, sanitizeInput, sanitizeName,
@@ -191,6 +191,25 @@ Selectable row with metadata slot and optional action menu.
 
 Props: `id`, `title`, `active`, `menuItems`, `menuOpen` (bindable), `menuButtonElement` (the anchor the menu opens against), `hasBadge` (renders the `badge` slot), `class`. Slots: default (metadata), `badge`.
 Events: `click` (`detail.id`), `menuSelect` (`detail.id`, `detail.action`), `menuToggle` (`detail.id`, `detail.open`), `menuClose` (`detail.id`).
+
+---
+
+### MappingChip
+
+One side of a source → target row, as Data Mapper, the Vitrine audit plugin and Icon Swapper draw it: a filled 24px chip with no border. It is a button — clicking it usually selects or opens what it names. Pair it with a `Dropdown` on the other side and `IconGoSmall` between them, in a grid of `var(--size-small) minmax(0, 1fr) var(--size-small) minmax(0, 1fr)` when rows have a tick.
+
+```svelte
+<script>
+  import { MappingChip } from "figma-plugin-utilities";
+  import { IconInstanceSmall } from "figma-ui3-kit-svelte/icons";
+</script>
+
+<MappingChip label={row.sourceName} count={row.uses} tone="secondary" title="Select these icons" on:click={() => reveal(row)} />
+<MappingChip label="Button" iconName={IconInstanceSmall} tone="component" preview="Primary" />
+<MappingChip label={token.name} chit={token.hex} selected={chosen} />
+```
+
+Props: `label`, `preview` (after the label, as "label · preview", in secondary text), `count` (trailing, tertiary, tabular), `iconName` or `chit` (a lead that hangs into the padding; `chit` wins), `tone` (`default` | `secondary` | `component` — text and icon color), `selected` (selection border), `disabled`, `title`, `ariaLabel`, `element` (bindable button), `class`. Slot: `lead` (a marker ahead of the lead, such as a refused write's "!"). Event: `click`.
 
 ---
 
