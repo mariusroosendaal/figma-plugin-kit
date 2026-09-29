@@ -34,7 +34,9 @@ Build a Figma mockup of a plugin UI from real UI3 components, starting from a `P
    | `<Chit color={…}>` | `{ c: 'Chit', props: { color: '#0D99FF' } }`. Connected, so it round-trips; use it for kit chits. |
    | A custom color swatch (not a kit Chit) | `{ swatch: '#0D99FF', size?: 16, radius?: 4 }` |
    | `<hr>` | `{ divider: true }` |
-   | Plugin window | `{ window: 'Name — view', width: 320, height?, children: [Header, PluginLayout, Footer] }` |
+   | Plugin window | `{ window: 'Name — view', width: 320, height?, title?, chrome?, children: [Header, PluginLayout, Footer] }` |
+
+   A window opens with Figma's title bar, the kit's **Plugin window header**: the plugin's icon, its name and a close button, as Figma draws them above every plugin UI. The name is the window's up to ` — `, or `title`; `chrome: false` leaves the bar out. `width` and `height` are the plugin's own, as passed to `figma.showUI`, so the window is 40px taller than `height` with the bar. The bar isn't kit code, so it has no Code Connect and doesn't round-trip.
 
    Build one window per tab or state. Build modals as standalone specs (`{ c: 'Modal', … }`). For a dialog that holds its own tabs and footer (`contentPadding={false}`), put a tabs row, a `fillHeight` stack and a `Footer` in its children.
 3. **Run it.** Paste the builder, then the spec, and end with:
@@ -174,6 +176,7 @@ Chip: { id: '1027205:88', key: '415f290a1158771314dd11b9fc83b97bc62e9b04', set: 
 Modal: { id: '1027206:365', key: '248a9a4ecea1cc16056ec1bc28b56acbf5cc8627', set: true },
 Menu: { id: '1027206:366', key: '460fe8753d38a6fa072564cfc475b7546803f486', set: false },
 Header: { id: '1027197:23734', key: '92dea3280c6742ad57bbd682c483cac3e5062980', set: false },
+WindowHeader: { id: '1027551:31', key: '135771e54148bad7bdcb0825057ac6785ba48f27', set: false },
 Footer: { id: '1027197:23800', key: '78de9140a69b8fb9bb9f797c34636f2b787fbf7e', set: true },
 PluginLayout: { id: '1027197:23801', key: '41f0db58e59fc01415c151d1cf7c2f1e25f9faea', set: false },
 FieldGroup: { id: '1027197:23913', key: '0b2eb3a95c0e4a960f7a8ee0e8b46a2136fd5dee', set: true },
@@ -1082,11 +1085,19 @@ root.cornerRadius = 13
 root.clipsContent = true
 root.counterAxisSizingMode = 'FIXED'
 root.resize(spec.width || 320, 100)
+page.appendChild(root)
+let chrome = 0
+if (spec.chrome !== false) {
+const bar = await instance('WindowHeader')
+setProp(bar, '🎛️ Title', spec.title ?? spec.window.split(' — ')[0])
+root.appendChild(bar)
+bar.layoutSizingHorizontal = 'FILL'
+chrome = bar.height
+}
 if (spec.height) {
 root.primaryAxisSizingMode = 'FIXED'
-root.resize(spec.width || 320, spec.height)
+root.resize(spec.width || 320, spec.height + chrome)
 }
-page.appendChild(root)
 for (const child of [].concat(spec.children || [])) await build(child, root, ctx)
 const layout = root.children.find((c) => c.name === 'Plugin layout' || c.name === 'PluginLayout')
 if (layout && spec.height) layout.layoutSizingVertical = 'FILL'
