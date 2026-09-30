@@ -42,9 +42,9 @@ The readers are designers, many reading in a second language. Plainness is a cor
 
 ## Images
 
-Build each image with the `mockup` skill. Use the repo copy, `_skills/figma-plugin-kit/skills/mockup/SKILL.md`; an installed plugin copy may be older. `guide-image.js`, next to this file, turns a built mockup into a guide image (steps 2 to 4 below).
+Build each image with the `mockup` skill. Use the repo copy, `_skills/figma-plugin-kit/skills/mockup/SKILL.md`; an installed plugin copy may be older. `guide-image.js`, next to this file, turns a built mockup into a guide image and its export frame (steps 2 to 4 and 6 below).
 
-The builder, the helper and a spec must fit in 50,000 characters. Keep only the `BUILDERS` and `UI3` entries the specs use (from `_packages/figma-plugin-utilities/figma/mockup/build-mockup.js`), minify with esbuild (`--minify-whitespace --minify-syntax --charset=utf8 --line-limit=1800`), and wrap it all in `async function __wrap(){ … return { buildMockup, guideImage } }`. For several images, stash `__wrap.toString()` in a hidden text node in the first call, run `eval('(' + stash.characters + ')')()` in the later ones, and delete the stash at the end.
+The builder, the helper and a spec must fit in 50,000 characters. Keep only the `BUILDERS` and `UI3` entries the specs use (from `_packages/figma-plugin-utilities/figma/mockup/build-mockup.js`), minify with esbuild (`--minify-whitespace --minify-syntax --charset=utf8 --line-limit=1800`), and wrap it all in `async function __wrap(){ … return { buildMockup, guideImage, guideFrames } }`. For several images, stash `__wrap.toString()` in a hidden text node in the first call, run `eval('(' + stash.characters + ')')()` in the later ones, and delete the stash at the end.
 
 A FieldGroup inside another FieldGroup's slot drops the outer group's other children. Wrap them in a stack instead.
 
@@ -55,7 +55,8 @@ An image can also show what the plugin draws on the canvas. Build it with the pl
 3. **Pins** are the UI3 `Comments/Pin` component (set `2012:63899` on the Comments page), variant `👥 Variant=1, 🐣 Type=Pin, 🐣 Hover=False, 🐣 Read=False, 🐣 Selected=False, 🐣 Active=True`. On each instance, set the nested `Avatar` instance's `👥 Variant` to `Blue`, then set its text layer `A` to the number (load its font first). Name the layer `Annotation <n>`.
 4. **Place each pin** with its tip (bottom-left corner) 4px after the end of the label's text: `x = renderBounds.right + 4`, `y = boundingBox.bottom − 32`. Use `absoluteRenderBounds` for the right edge, since a label that fills its row has a bounding box as wide as the row. Number pins in reading order, top to bottom.
 5. **Check the screenshot**: no pin covers the text it names, and the numbers match the list.
+6. **Frame each image for export.** `guideImage` ends with `guideFrames(set)`, which gives every variant a frame named after its file (`data-mapper-sources`), in a row under the set: 680px wide (the width of a document's image block), an instance of the variant centered on the Vitrine Utilities `background/secondary` fill with `space/5` padding, and SVG and PNG 2x export settings. It reuses frames by name, so run `guideFrames(set)` on its own to frame a set built before this step. A variant is rebuilt in place, so its instances in frames and documents follow it.
 
 ## Publishing
 
-The user turns `GUIDE.md` into a Figma document with the Markdown Docs plugin, and places the image variants in its image blocks. Keep each image reference alone on its line, and keep the file names stable, since the plugin matches images by file name.
+The user turns `GUIDE.md` into a Figma document with the Markdown Docs plugin, and places the image variants in its image blocks. The frames export as SVG for Notion, and as PNG files named like the image references in `GUIDE.md`. Keep each image reference alone on its line, and keep the file names stable, since the plugin matches images by file name.
