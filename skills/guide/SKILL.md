@@ -4,7 +4,7 @@ description: "Write a short user guide for a plugin (GUIDE.md) with annotated mo
 
 # Plugin user guides
 
-A guide explains how a plugin works, screen by screen, to the designers who use it. It is a Markdown file, `<Plugin>/GUIDE.md`, with an annotated mockup of each key screen. The README says what the plugin is and how to build it; the guide says what each control does. `Vitrine Tools/GUIDE.md` (large) and `Batch Rename Variants/GUIDE.md` (small) show the target density.
+A guide explains how a plugin works, screen by screen, to the designers who use it. It is a Markdown file, `<Plugin>/docs/GUIDE.md`, with an annotated mockup of each key screen. The README says what the plugin is and how to build it; the guide says what each control does. `Vitrine Tools/docs/GUIDE.md` (large) and `Batch Rename Variants/docs/GUIDE.md` (small) show the target density.
 
 ## Inputs
 
