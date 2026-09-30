@@ -59,4 +59,4 @@ An image can also show what the plugin draws on the canvas. Build it with the pl
 
 ## Publishing
 
-The user turns `GUIDE.md` into a Figma document with the Markdown Docs plugin, and places the image variants in its image blocks. The frames export as SVG for Notion, and as PNG files named like the image references in `GUIDE.md`. Keep each image reference alone on its line, and keep the file names stable, since the plugin matches images by file name.
+The user turns `GUIDE.md` into a Figma document with the Markdown Docs plugin, and places the image variants in its image blocks. The frames export as SVG for Notion, and as PNG files named like the image references in `GUIDE.md`. `npm run notion-zip -- "<Plugin>" --export` renders the frames as SVG next to `GUIDE.md` and packs the guide for Notion's Markdown import, pointing each image line at its SVG. Without `--export` it packs the SVGs already there. Keep each image reference alone on its line, and keep the file names stable, since the plugin matches images by file name.
