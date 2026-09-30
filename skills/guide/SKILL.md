@@ -58,4 +58,4 @@ An image can also show what the plugin draws on the canvas. Build it with the pl
 
 ## Publishing
 
-The user turns `GUIDE.md` into a Figma document with the Markdown to Figma plugin, and places the image variants in its image blocks. Keep each image reference alone on its line, and keep the file names stable, since the plugin matches images by file name.
+The user turns `GUIDE.md` into a Figma document with the Markdown Docs plugin, and places the image variants in its image blocks. Keep each image reference alone on its line, and keep the file names stable, since the plugin matches images by file name.
