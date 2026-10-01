@@ -213,8 +213,13 @@ function flatIcon(inst, parent) {
   frame.children.forEach(walk)
   const solid = (ps) => (Array.isArray(ps) ? ps.find((p) => p.visible !== false && p.type === 'SOLID' && (p.opacity ?? 1) > 0) : null)
   const light = (p) => p.color.r + p.color.g + p.color.b > 1.5
-  // clone() and outlineStroke() put their node on the page, at the origin.
+  // clone() and outlineStroke() put their node on the page. A clone keeps the original's transform;
+  // an outline's is relative to the original's parent and covers the stroke's overhang.
   const [[, , fx], [, , fy]] = frame.absoluteTransform
+  const mul = (a, b) => [
+    [a[0][0] * b[0][0] + a[0][1] * b[1][0], a[0][0] * b[0][1] + a[0][1] * b[1][1], a[0][0] * b[0][2] + a[0][1] * b[1][2] + a[0][2]],
+    [a[1][0] * b[0][0] + a[1][1] * b[1][0], a[1][0] * b[0][1] + a[1][1] * b[1][1], a[1][0] * b[0][2] + a[1][1] * b[1][2] + a[1][2]],
+  ]
   const place = (shape, t) => {
     frame.appendChild(shape)
     shape.relativeTransform = [
@@ -231,7 +236,8 @@ function flatIcon(inst, parent) {
   for (const n of leaves) {
     const t = n.absoluteTransform
     const fill = solid(n.fills)
-    const stroke = n.strokeWeight > 0 ? solid(n.strokes) : null
+    // strokeWeight is mixed when the sides differ, so ask outlineStroke(), which returns null for none.
+    const stroke = solid(n.strokes)
     const outline = stroke ? n.outlineStroke() : null
     if (fill) {
       const s = n.clone()
@@ -240,7 +246,7 @@ function flatIcon(inst, parent) {
       paint(s, fill)
     }
     if (outline) {
-      place(outline, t)
+      place(outline, mul(n.parent.absoluteTransform, outline.relativeTransform))
       paint(outline, stroke)
     }
     n.remove()
