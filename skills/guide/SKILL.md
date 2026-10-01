@@ -27,7 +27,7 @@ A guide explains how a plugin works, screen by screen, to the designers who use 
 
 - About one screen per tab. Cut anything that restates the image, the heading or another item.
 - Three or four pins per image. More means the image needs to be split, or some controls don't need an item. A screen with one field can have none, and prose in place of the list.
-- One example per idea. Don't list every option in a dropdown or every value of a scale; describe the pattern and name one.
+- One example per idea. Don't list every value of a scale or every option of a long list; describe the pattern and name one.
 
 ## Writing
 
@@ -38,7 +38,7 @@ The readers are designers, many reading in a second language. Plainness is a cor
 - **No idiom, metaphor or phrasal verb** where a plain verb exists. Every sentence has a subject that acts. Use the imperative for what the reader does: "Click a set to open it in the table."
 - **One em dash per sentence**, only after a bold label in a list item. Elsewhere use a colon, a full stop or parentheses.
 - **Current state only.** No history, no "new", no changelog. No claims about the reader ("the most common mistake").
-- **Describe only what the image shows.** An item names a control or area that is visible in the mockup and says what it does. A visible button can get one clause for what it opens ("generates the sizes from a formula"), but don't describe what the image doesn't show: the contents of a dialog, popover, menu or editor that is closed in the mockup, or a state it isn't in. Give that screen its own image, or leave it out.
+- **Describe only what the image shows.** An item names a control or area that is visible in the mockup and says what it does. A visible button can get one clause for what it opens ("generates the sizes from a formula"), and a visible dropdown can name its options and what each one does (**Create new collection…** creates `responsive`). Don't describe anything else the image doesn't show: the contents of a dialog, popover, menu or editor that is closed in the mockup, or a state it isn't in. Give that screen its own image, or leave it out.
 - **Every claim traces to code.** Limits, rules and side effects come from reading `code.ts` (for example the characters a name can't contain), not from labels or guesses. Where code and copy disagree, describe what the code does and tell the user about the mismatch.
 - US spelling ("color"), sentence case, no exclamation marks.
 
