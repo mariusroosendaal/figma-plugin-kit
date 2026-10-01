@@ -79,7 +79,7 @@ Top bar with optional `left`, `center` and `right` slots.
 <Header title="Settings" noBorder />
 ```
 
-Props: `title`, `noBorder`, `className`. Slots: `left`, `center`, `right`.
+Props: `title`, `noBorder`, `className`. Slots: `left`, `center`, `right`. The left padding is 16px, and 8px when the `left` slot has content (tabs, buttons), whose own padding insets them.
 
 ---
 
@@ -109,7 +109,7 @@ Sticky bottom bar. Three layout variants.
 </Footer>
 ```
 
-Props: `variant` (`"right"` | `"split"` | `"full"`), `className`. Slots: `left`, `right` (split only).
+Props: `variant` (`"right"` | `"split"` | `"full"`), `className`. Slots: `left`, `right` (split only). The padding is 8px, for buttons; a kit `Text` first in the split footer's `left` slot, or last in `right`, sits 16px from the edge.
 
 ---
 
