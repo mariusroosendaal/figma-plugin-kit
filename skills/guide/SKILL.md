@@ -16,7 +16,7 @@ A guide explains how a plugin works, screen by screen, to the designers who use 
 - `# <Plugin>`, then an intro of two sentences at most: what the plugin does, with one concrete example, and the main idea it turns on.
 - One `##` per tab or task. A one-screen plugin has one `##`, named for the task ("Rename a value").
 - Under it, a `###` per view (Sidebar, Table, Preview, Review) where there are several. Each view is:
-  1. The image, `![](<file>.png)`, alone on its line.
+  1. The image, `![](<file>.svg)`, alone on its line.
   2. One line on what the view shows, when the heading doesn't already say it.
   3. A numbered list that matches the pins on the image: `1. **<UI label>** — what it does.`
   4. A closing line for the primary action: `Click **<button label>** to <result>. Press Ctrl/Cmd+Z to undo.`
@@ -53,7 +53,7 @@ A FieldGroup inside another FieldGroup's slot drops the outer group's other chil
 An image can also show what the plugin draws on the canvas. Build it with the plugin's own drawing code from `code.ts`, and place pins with `find` on a point, since a shape's bounding box has no useful corner.
 
 1. **Show a real state.** Use default values or a realistic example that matches the guide's text (`size`, `sm`, `small`), with the primary action enabled.
-2. **One component set per plugin**, `<Plugin> guide images`, on the plugin's page. Each image is a variant named `Property 1=<file>`, where `<file>` is the image reference without `.png`: `batch-rename-form`, `typography-sidebar`. Name files `<tab>-<view>`, or `<plugin>-<view>` for a one-screen plugin. A variant is a transparent component that doesn't clip, with the mockup inset 24px on every side.
+2. **One component set per plugin**, `<Plugin> guide images`, on the plugin's page. Each image is a variant named `Property 1=<file>`, where `<file>` is the image reference without `.svg`: `batch-rename-form`, `typography-sidebar`. Name files `<tab>-<view>`, or `<plugin>-<view>` for a one-screen plugin. A variant is a transparent component that doesn't clip, with the mockup inset 24px on every side.
 3. **Pins** are the UI3 `Comments/Pin` component (set `2012:63899` on the Comments page), variant `👥 Variant=1, 🐣 Type=Pin, 🐣 Hover=False, 🐣 Read=False, 🐣 Selected=False, 🐣 Active=True`. On each instance, set the nested `Avatar` instance's `👥 Variant` to `Blue`, then set its text layer `A` to the number (load its font first). Name the layer `Annotation <n>`.
 4. **Place each pin** with its tip (bottom-left corner) 4px after the end of the label's text: `x = renderBounds.right + 4`, `y = boundingBox.bottom − 32`. Use `absoluteRenderBounds` for the right edge, since a label that fills its row has a bounding box as wide as the row. Number pins in reading order, top to bottom.
 5. **Check the screenshot**: no pin covers the text it names, and the numbers match the list.
@@ -61,4 +61,4 @@ An image can also show what the plugin draws on the canvas. Build it with the pl
 
 ## Publishing
 
-The user turns `GUIDE.md` and its parts into Figma documents with Markdown Docs' **Sync design docs**, run on the plugin's page. Each image line takes a copy of the frame of the same name from that page, in a wide block when the frame is wider than 680px, so the documents need no image placed by hand, and a rebuilt variant shows through. The frames export as SVG for Notion, and as PNG files named like the image references in `GUIDE.md`. `npm run notion-zip -- "<Plugin>" --export` renders the frames as SVG next to `GUIDE.md` and packs the guide for Notion's Markdown import, with its parts, pointing each image line at its SVG. Without `--export` it packs the SVGs already there. Keep each image reference alone on its line, and keep the file names stable, since the plugin matches images by file name.
+The user turns `GUIDE.md` and its parts into Figma documents with Markdown Docs' **Sync design docs**, run on the plugin's page. Each image line takes a copy of the frame of the same name from that page, in a wide block when the frame is wider than 680px, so the documents need no image placed by hand, and a rebuilt variant shows through. `npm run notion-zip -- "<Plugin>" --export` renders the frames as SVG files next to `GUIDE.md`, named like its image references, and packs the guide for Notion's Markdown import, with its parts. Without `--export` it packs the SVGs already there. Commit the SVGs with the guide: GitHub shows them in `GUIDE.md` as they are. The frames also export as PNG at 2x, for anywhere that takes no SVG. Keep each image reference alone on its line, and keep the file names stable, since the plugin matches images by file name.
