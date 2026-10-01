@@ -4,7 +4,7 @@ description: "Write a short user guide for a plugin (GUIDE.md) with annotated mo
 
 # Plugin user guides
 
-A guide explains how a plugin works, screen by screen, to the designers who use it. It is a Markdown file, `<Plugin>/docs/GUIDE.md`, with an annotated mockup of each key screen. The README says what the plugin is and how to build it; the guide says what each control does. `Vitrine Tools/docs/GUIDE.md` (large) and `Batch Rename Variants/docs/GUIDE.md` (small) show the target density.
+A guide explains how a plugin works, screen by screen, to the designers who use it. It is a Markdown file, `<Plugin>/docs/GUIDE.md`, with an annotated mockup of each key screen. The README says what the plugin is and how to build it; the guide says what each control does. `Vitrine Tools/docs/` (large, in parts) and `Batch Rename Variants/docs/GUIDE.md` (small) show the target density.
 
 ## Inputs
 
@@ -21,6 +21,7 @@ A guide explains how a plugin works, screen by screen, to the designers who use 
   3. A numbered list that matches the pins on the image: `1. **<UI label>** — what it does.`
   4. A closing line for the primary action: `Click **<button label>** to <result>. Press Ctrl/Cmd+Z to undo.`
 - Mention states that don't earn an image (empty selection, errors) in one sentence at the end of the section.
+- A guide with several large tabs goes in parts. `GUIDE.md` keeps the title and the intro, and lists the parts as `1. **<Tab>** — what it covers.`, without links: Markdown Docs takes only absolute URLs, and a relative link fails the whole file. Each part is `docs/guide-<tab>.md`, with `# <Tab>` and a `##` per view. A tab's settings go in its part, under `## Settings`; the first-run setup and anything for the whole plugin get a part of their own.
 
 ## Length budget
 
@@ -59,4 +60,4 @@ An image can also show what the plugin draws on the canvas. Build it with the pl
 
 ## Publishing
 
-The user turns `GUIDE.md` into a Figma document with the Markdown Docs plugin, and places the image variants in its image blocks. The frames export as SVG for Notion, and as PNG files named like the image references in `GUIDE.md`. `npm run notion-zip -- "<Plugin>" --export` renders the frames as SVG next to `GUIDE.md` and packs the guide for Notion's Markdown import, pointing each image line at its SVG. Without `--export` it packs the SVGs already there. Keep each image reference alone on its line, and keep the file names stable, since the plugin matches images by file name.
+The user turns `GUIDE.md` into a Figma document with the Markdown Docs plugin, and places the image variants in its image blocks. The frames export as SVG for Notion, and as PNG files named like the image references in `GUIDE.md`. `npm run notion-zip -- "<Plugin>" --export` renders the frames as SVG next to `GUIDE.md` and packs the guide for Notion's Markdown import, with its parts, pointing each image line at its SVG. Without `--export` it packs the SVGs already there. Keep each image reference alone on its line, and keep the file names stable, since the plugin matches images by file name.
