@@ -464,6 +464,30 @@ Props: `variant` (`"info"` | `"success"` | `"warning"` | `"danger"`), `message` 
 
 ---
 
+### SidebarRow
+
+```svelte
+<SidebarRow
+  meta="#3 ∙ Page 1"
+  title="Wayne Sun"
+  detail="Just now"
+  message="What happens if we adjust this to handle a light and dark mode?"
+  link="2 replies"
+  unread
+  on:click={open}
+  on:link={openReplies}
+>
+  <svelte:fragment slot="lead"><Avatar name="Wayne Sun" color="yellow" /></svelte:fragment>
+  <svelte:fragment slot="actions">
+    <IconButton iconName={IconResolve} ariaLabel="Resolve" on:click={resolve} />
+  </svelte:fragment>
+</SidebarRow>
+```
+
+UI3's Sidebar row comment, for any list of things that say where, what and what to do (comments, notifications). Props: `meta` (where), `title`, `detail` (beside the title), `message` (or default slot), `link` (the link line), `unread` (blue dot, blue link), `selected`, `clickable` (default `true`: the row is a button with the hover fill), `lines` (cut the message after; 0 shows all), `ariaLabel` (the row button's; its text by default), `class`. Slots: `lead` (avatars or an icon), `actions` (icon buttons, shown on hover, focus and while selected, over the unread dot). Events: `click` (the row), `link`.
+
+---
+
 ### Chip
 
 ```svelte
