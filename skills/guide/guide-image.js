@@ -195,55 +195,7 @@ async function guideCover({ set, image, title, description, icon }) {
   shot.rescale(Math.min(2, 864 / shot.width, 984 / shot.height))
   fill('plugin', shot)
   fill('icon', iconInstance())
-  const card = await guideCard(set, variant.name.replace(/^Property 1=/, ''))
-  return { icon: iconFrame.id, thumbnail: thumbFrame.id, card }
-}
-
-// Builds the plugin's card for the Notion gallery of guides: a 16:9 frame named `card`, with a guide
-// image without its pins, at 1x on the guide frames' background and padding (see guideFrames), and
-// set to export as SVG (assets/card.svg, the guide's Cover property in Notion). The image is the one
-// the `thumbnail` frame shows, or the set's first variant, unless `image` names another. guideCover
-// calls it; call it on its own to build the card of a plugin whose cover exists. Reuses the frame by
-// name; a new one goes to the right of the page's content.
-async function guideCard(set, image) {
-  const pageNode = set.parent
-  let variant = image && set.children.find((c) => c.name === 'Property 1=' + image)
-  if (image && !variant) throw new Error('No variant ' + image + ' in ' + set.name)
-  if (!variant) {
-    const thumb = pageNode.children.find((n) => n.type === 'FRAME' && n.name === 'thumbnail')
-    const slot = thumb && thumb.findOne((n) => n.type === 'SLOT' && n.name === 'plugin')
-    const shown = slot && slot.children[0] && slot.children[0].type === 'INSTANCE' ? await slot.children[0].getMainComponentAsync() : null
-    variant = shown && shown.parent === set ? shown : set.children[0]
-  }
-  const bg = await figma.variables.importVariableByKeyAsync('3539b12e3bcc45b92e14e23963e16960b4f74ba4')
-  const space = await figma.variables.importVariableByKeyAsync('4be65b9f7a38b1b32d61d341268e94daa0f13c7b')
-  let frame = pageNode.children.find((n) => n.type === 'FRAME' && n.name === 'card')
-  if (frame) for (const c of [...frame.children]) c.remove()
-  else {
-    const right = Math.max(...pageNode.children.map((n) => n.x + n.width))
-    frame = figma.createFrame()
-    frame.name = 'card'
-    pageNode.appendChild(frame)
-    frame.x = right + 200
-    frame.y = 0
-  }
-  frame.layoutMode = 'VERTICAL'
-  frame.primaryAxisAlignItems = 'CENTER'
-  frame.counterAxisAlignItems = 'CENTER'
-  for (const side of ['paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft']) frame.setBoundVariable(side, space)
-  frame.fills = [figma.variables.setBoundVariableForPaint({ type: 'SOLID', color: { r: 0.95, g: 0.95, b: 0.95 } }, 'color', bg)]
-  frame.clipsContent = false
-  frame.exportSettings = [{ format: 'SVG', suffix: '', contentsOnly: true, svgOutlineText: true, svgIdAttribute: false, svgSimplifyStroke: true }]
-  const shot = variant.createInstance()
-  shot.setProperties({ [pinsProperty(set)]: false })
-  frame.appendChild(shot)
-  // The image's height, padded, sets the size; a wide image widens the frame instead.
-  const pad = frame.paddingTop
-  const width = Math.max(Math.round(((variant.height + pad * 2) * 16) / 9), Math.round(variant.width + pad * 2))
-  frame.primaryAxisSizingMode = 'FIXED'
-  frame.counterAxisSizingMode = 'FIXED'
-  frame.resize(width, Math.round((width * 9) / 16))
-  return frame.id
+  return { icon: iconFrame.id, thumbnail: thumbFrame.id }
 }
 
 // Turns an icon instance, appended to parent, into a static copy: its black fill and one white
