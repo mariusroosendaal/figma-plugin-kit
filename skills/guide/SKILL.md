@@ -66,14 +66,14 @@ An image can also show what the plugin draws on the canvas. Build it with the pl
 
 ## Cover and icon
 
-The Community listing's icon (128px) and cover (1920 × 1080) are built on the plugin's page in the guides file (`32BXCiwUt7nixe5HKsmBfG`), which holds the templates on its components page: the `thumbnail` component, and the `icon` set with a variant per plugin, `icon=<plugin folder in kebab-case>` (`icon=batch-rename-variants`), drawn by the user. An alternative design takes `-alt` (`icon=huetone-to-variables-alt`). Build them after the guide images, with `guideCover({ set, title, description, icon, image })` from `guide-image.js`, in a call of its own on the plugin's page. It reuses the `icon` and `thumbnail` frames by name.
+The Community listing's icon (128px) and cover (1920 × 1080), and the card in the Notion gallery of guides (16:9), are built on the plugin's page in the guides file (`32BXCiwUt7nixe5HKsmBfG`), which holds the templates on its components page: the `thumbnail` component, and the `icon` set with a variant per plugin, `icon=<plugin folder in kebab-case>` (`icon=batch-rename-variants`), drawn by the user. An alternative design takes `-alt` (`icon=huetone-to-variables-alt`). Build them after the guide images, with `guideCover({ set, title, description, icon, image })` from `guide-image.js`, in a call of its own on the plugin's page. It reuses the `icon`, `thumbnail` and `card` frames by name.
 
 - **title** — the plugin's name.
 - **description** — the README's one-line summary, verb first and under 80 characters: "Rename variant property values across many component sets at once."
 - **icon** — leave it out to use the plugin's own variant; name another value to use that one. If the plugin has no variant, stop and ask the user to draw one.
 - **image** — the guide image to show, without its pins. The first variant by default; pick the screen that shows what the plugin does, at a size that stays readable (a tall sidebar shrinks too far).
 
-The `icon` frame holds a flattened copy of the variant: one white vector over the black fill, strokes outlined and keylines gone, so the SVG is a clean rect and path. It doesn't follow the variant, so run `guideCover` again after editing an icon. The cover keeps a live instance. The pins of every image follow the set's `pins` property, which the cover turns off. `npm run figma-assets -- "<Plugin>"` renders both frames into `<Plugin>/assets/`.
+The `icon` frame holds a flattened copy of the variant: one white vector over the black fill, strokes outlined and keylines gone, so the SVG is a clean rect and path. It doesn't follow the variant, so run `guideCover` again after editing an icon. The cover keeps a live instance. The `card` frame shows the cover's image at 1x, on the guide frames' background and padding, widened to 16:9; `guideCard(set, image)` rebuilds it on its own, with the image the cover shows unless `image` names another. The pins of every image follow the set's `pins` property, which the cover and the card turn off. `npm run figma-assets -- "<Plugin>"` renders the frames into `<Plugin>/assets/`, and `notion-sync` puts `card.svg` in the guide's Cover property.
 
 ## Publishing
 
