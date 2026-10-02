@@ -123,7 +123,7 @@ await buildMockup(SPEC, { icons: { 'icon.24.settings': { id: '1:531125', key: '5
 
 ## Example
 
-A full round-trip example (the Spacing Sets Scale tab) is in `figma-plugin-utilities/figma/mockup/examples/spacing-sets.js`. A minimal spec:
+A full example (the Scale tab of Spacing Sets, a plugin since rolled into Vitrine Tools) is in `figma-plugin-utilities/figma/mockup/examples/spacing-sets.js`. A minimal spec:
 
 ```js
 const SPEC = {
