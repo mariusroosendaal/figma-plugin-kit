@@ -13,15 +13,15 @@ A guide explains how a plugin works, screen by screen, to the designers who use 
 
 ## Structure
 
-- `# <Plugin>`, then an intro of two sentences at most: what the plugin does, with one concrete example, and the main idea it turns on.
+- `# <Plugin>`, then an intro of two or three sentences: what the reader gets from the plugin, with one concrete example, then the main idea it turns on. Start from the reader's task ("Icon Swapper moves a file from one icon collection to another…"), not from the mechanism.
 - One `##` per tab or task. A one-screen plugin has one `##`, named for the task ("Rename a value").
 - Under it, a `###` per view (Sidebar, Table, Preview, Review) where there are several. Each view is:
   1. The image, `![](<file>.svg)`, alone on its line.
   2. One line on what the view shows, when the heading doesn't already say it.
-  3. A numbered list that matches the pins on the image: `1. **<UI label>** — what it does.`
+  3. A numbered list that matches the pins on the image: `1. **<UI label>**—what it does.`
   4. A closing line for the primary action: `Click **<button label>** to <result>. Press Ctrl/Cmd+Z to undo.`
 - Mention states that don't earn an image (empty selection, errors) in one sentence at the end of the section.
-- A guide with several large tabs goes in parts. `GUIDE.md` keeps the title and the intro, and lists the parts as `1. **<Tab>** — what it covers.`, without links: Markdown Docs takes only absolute URLs, and a relative link fails the whole file. Each part is `docs/guide-<tab>.md`, with `# <Tab>` and a `##` per view. A tab's settings go in its part, under `## Settings`; the first-run setup and anything for the whole plugin get a part of their own.
+- A guide with several large tabs goes in parts. `GUIDE.md` keeps the title and the intro, and lists the parts as `1. **<Tab>**—what it covers.`, without links: Markdown Docs takes only absolute URLs, and a relative link fails the whole file. Each part is `docs/guide-<tab>.md`, with `# <Tab>` and a `##` per view. A tab's settings go in its part, under `## Settings`; the first-run setup and anything for the whole plugin get a part of their own.
 
 ## Length budget
 
@@ -31,12 +31,17 @@ A guide explains how a plugin works, screen by screen, to the designers who use 
 
 ## Writing
 
-The readers are designers, many reading in a second language. Plainness is a correctness requirement.
+The readers are designers, many reading in a second language. Plainness is a correctness requirement. Plain doesn't mean cold: write as a colleague showing the plugin to someone at their desk, in short, simple sentences.
 
-- **Use the UI's own labels, in bold, exactly as the code has them.** Quote names and values from the file in code style: `heading/1/sm-lg`, `size=sm`.
+- **Use the UI's own labels, in bold, exactly as the code has them.** Quote names and values from the file in code style: `heading/1/sm-lg`, `size=sm`. Drop the count from a label that changes with the reader's file: "Click **Swap icons**", not "Click **Swap 114 icons**". Say what the count means only when it helps: "The button shows how many layers change."
 - **One name per concept.** Pick one word for a thing (set, value, breakpoint) and keep it through the whole guide.
 - **No idiom, metaphor or phrasal verb** where a plain verb exists. Every sentence has a subject that acts. Use the imperative for what the reader does: "Click a set to open it in the table."
-- **One em dash per sentence**, only after a bold label in a list item. Elsewhere use a colon, a full stop or parentheses.
+- **Talk to the reader.** Make "you" the subject when the reader acts or sees something, and keep "the plugin" for what it does on its own. "High-confidence matches start checked", not "The plugin checks the matches of high confidence for you". A guide where most sentences start with "The plugin" reads like a spec.
+- **Give the reason for a surprise.** When a behavior could puzzle the reader (an empty cell, a dimmed value, rows left out), add a short clause on why: "The cell where a color meets itself stays empty, since there is nothing to compare." Skip it when the reason is obvious.
+- **Reassure before a big change.** Before a bulk or destructive action, say what stays safe: nothing changes until the reader clicks the button, edits stay private until written, Ctrl/Cmd+Z undoes it. A reason that frees the reader to experiment is welcome ("so you can try things freely").
+- **Write rules as help.** Matching rules, limits and edge cases go in an "If … " line that starts from what the reader sees and ends with what to do: "If a match looks wrong, check the names. … For any other icon, pick the right one from the dropdown."
+- **Common contractions are fine**: don't, isn't, can't, it's, you're. Skip the rarer ones (you'd, it'll, there'd).
+- **One em dash per sentence**, only after a bold label in a list item. Elsewhere use a colon, a full stop or parentheses. No spaces around it: `**Scale**—the sizes`, not `**Scale** — the sizes`.
 - **Current state only.** No history, no "new", no changelog. No claims about the reader ("the most common mistake").
 - **Describe only what the image shows.** An item names a control or area that is visible in the mockup and says what it does. A visible button can get one clause for what it opens ("generates the sizes from a formula"), and a visible dropdown can name its options and what each one does (**Create new collection…** creates `responsive`). Don't describe anything else the image doesn't show: the contents of a dialog, popover, menu or editor that is closed in the mockup, or a state it isn't in. Give that screen its own image, or leave it out.
 - **Every claim traces to code.** Limits, rules and side effects come from reading `code.ts` (for example the characters a name can't contain), not from labels or guesses. Where code and copy disagree, describe what the code does and tell the user about the mismatch.
