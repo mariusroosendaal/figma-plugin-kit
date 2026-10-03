@@ -13,7 +13,7 @@ Build a Figma mockup of a plugin UI from real UI3 components, starting from a `P
 - Load the `figma-use` skill; every build is a `use_figma` call.
 - **Where to build**
   - **UI3 file** (`6dJFbL7SDC7kkS1fu3AHH6`), page **Mockups** (`1027190:25`). This is the default and needs no setup.
-  - **Any other design file** with the UI3 library enabled. Components, styles and variables are imported by key. Icons need `options.icons` (see below).
+  - **Any other design file**, with access to the UI3 library. Components, styles and variables are imported by key. Icons need `options.icons` (see below).
 - The builder is the `build-mockup.js` source at the end of this skill, minified. It is about 41 KB, and `use_figma` accepts 50,000 characters in all, so keep the spec under about 6 KB: build repeated parts with small helper functions rather than writing them out, and split a large screen into several windows.
 
 ## Workflow
