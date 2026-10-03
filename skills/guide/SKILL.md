@@ -18,10 +18,10 @@ A guide explains how a plugin works, screen by screen, to the designers who use 
 - Under it, a `###` per view (Sidebar, Table, Preview, Review) where there are several. Each view is:
   1. The image, `![](<file>.svg)`, alone on its line.
   2. One line on what the view shows, when the heading doesn't already say it.
-  3. A numbered list that matches the pins on the image: `1. **<UI label>**: what it does.`
+  3. A numbered list that matches the pins on the image: `1. **<UI label>** — what it does.`
   4. A closing line for the primary action: `Click **<button label>** to <result>. Press Ctrl/Cmd+Z to undo.`
 - Mention states that don't earn an image (empty selection, errors) in one sentence at the end of the section.
-- A guide with several large tabs goes in parts. `GUIDE.md` keeps the title and the intro, and lists the parts as `1. **<Tab>**: what it covers.`, without links: Markdown Docs takes only absolute URLs, and a relative link fails the whole file. Each part is `docs/guide-<tab>.md`, with `# <Tab>` and a `##` per view. A tab's settings go in its part, under `## Settings`; the first-run setup and anything for the whole plugin get a part of their own.
+- A guide with several large tabs goes in parts. `GUIDE.md` keeps the title and the intro, and lists the parts as `1. **<Tab>** — what it covers.`, without links: Markdown Docs takes only absolute URLs, and a relative link fails the whole file. Each part is `docs/guide-<tab>.md`, with `# <Tab>` and a `##` per view. A tab's settings go in its part, under `## Settings`; the first-run setup and anything for the whole plugin get a part of their own.
 
 ## Length budget
 
@@ -41,7 +41,7 @@ The readers are designers, many reading in a second language. Plainness is a cor
 - **Reassure before a big change.** Before a bulk or destructive action, say what stays safe: nothing changes until the reader clicks the button, edits stay private until written, Ctrl/Cmd+Z undoes it. A reason that frees the reader to experiment is welcome ("so you can try things freely").
 - **Write rules as help.** Matching rules, limits and edge cases go in an "If … " line that starts from what the reader sees and ends with what to do: "If a match looks wrong, check the names. … For any other icon, pick the right one from the dropdown."
 - **Common contractions are fine**: don't, isn't, can't, it's, you're. Skip the rarer ones (you'd, it'll, there'd).
-- **A colon after a bold label in a list item**: `**Scale**: the sizes`, not `**Scale**—the sizes`. Keep it the only colon in that sentence. Elsewhere an em dash is fine, one per sentence, with no spaces around it: `the sizes—and only those`, not `the sizes — and only those`.
+- **A spaced em dash after a bold label in a list item**: `**Scale** — the sizes`, not `**Scale**—the sizes` or `**Scale**: the sizes`. Elsewhere an em dash is fine, one per sentence, with no spaces around it: `the sizes—and only those`, not `the sizes — and only those`.
 - **Current state only.** No history, no "new", no changelog. No claims about the reader ("the most common mistake").
 - **Describe only what the image shows.** An item names a control or area that is visible in the mockup and says what it does. A visible button can get one clause for what it opens ("generates the sizes from a formula"), and a visible dropdown can name its options and what each one does (**Create new collection…** creates `responsive`). Don't describe anything else the image doesn't show: the contents of a dialog, popover, menu or editor that is closed in the mockup, or a state it isn't in. Give that screen its own image, or leave it out.
 - **Every claim traces to code.** Limits, rules and side effects come from reading `code.ts` (for example the characters a name can't contain), not from labels or guesses. Where code and copy disagree, describe what the code does and tell the user about the mismatch.
