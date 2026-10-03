@@ -164,6 +164,22 @@ Props: `value`, `placeholder`, `rows`, `disabled`, `readonly`, `id`, `name`, `va
 
 ---
 
+### Dropzone
+
+```svelte
+<Dropzone
+  accept="image/png,image/jpeg,image/gif"
+  buttonLabel="Choose images"
+  hint="Or drop PNG, JPEG or GIF files here"
+  on:files={(e) => read(e.detail.files)}
+  on:reject={(e) => warn(e.detail.files)}
+/>
+```
+
+A dashed area that takes files dropped on it or picked with its button, as on Figma's publish screen; it turns selected-blue while files are dragged over it. Props: `accept` (the file input's list: MIME types, `image/*` wildcards or `.ext`), `multiple` (default `true`; `false` keeps the first match), `buttonLabel`, `hint` (a line under the button, linked with `aria-describedby`), `iconName` (the 48px illustration, the image icon by default; `null` for none), `disabled`, `invalid` and `errorMessage`, `id`, `ariaLabel`, `class`. Slot: default (replaces the illustration, e.g. with thumbnails). Events: `files` (`detail.files`, the matching `File`s), `reject` (`detail.files`, the rest). It hands over `File`s and reads nothing; send their bytes to `code.ts` with `new Uint8Array(await file.arrayBuffer())` for `figma.createImage`.
+
+---
+
 ### NumericInput
 
 ```svelte
