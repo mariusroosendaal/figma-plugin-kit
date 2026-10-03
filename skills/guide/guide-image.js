@@ -22,8 +22,9 @@ async function guideImage({ set: setName, image, win, pins, pad = 24 }) {
   comp.appendChild(win)
   win.x = pad
   win.y = pad
-  const pinSet = await figma.getNodeByIdAsync('2012:63899')
-  const pinMain = pinSet.children.find((v) => v.name === '👥 Variant=1, 🐣 Type=Pin, 🐣 Hover=False, 🐣 Read=False, 🐣 Selected=False, 🐣 Active=True')
+  // The UI3 file has the set locally; any other file imports it from the library.
+  const pinSet = (await figma.getNodeByIdAsync('2012:63899')) || (await figma.importComponentSetByKeyAsync('02662c9b94a0b14a24c32cd82bebb2655fc8423d'))
+  const pinMain = pinSet.children.find((v) => v.name === '👥 Variant=1, 🐣 Type=Pin, 🐣 Hover=False, 🐣 Read=True, 🐣 Selected=False, 🐣 Active=True')
   const ox = comp.absoluteTransform[0][2]
   const oy = comp.absoluteTransform[1][2]
   const placed = []
@@ -36,8 +37,9 @@ async function guideImage({ set: setName, image, win, pins, pad = 24 }) {
     const pin = pinMain.createInstance()
     comp.appendChild(pin)
     pin.name = 'Annotation ' + (i + 1)
-    pin.findOne((n) => n.type === 'INSTANCE' && n.name === 'Avatar').setProperties({ '👥 Variant': 'Blue' })
-    const t = pin.findOne((n) => n.type === 'TEXT' && n.name === 'A')
+    pin.findOne((n) => n.type === 'INSTANCE' && n.name === 'Avatar').setProperties({ '👥 Variant': 'Overflow Read' })
+    await darkPin(pin)
+    const t = pin.findOne((n) => n.type === 'TEXT')
     for (const f of t.getStyledTextSegments(['fontName']).map((s) => s.fontName)) await figma.loadFontAsync(f)
     t.characters = String(i + 1)
     pin.x = Math.round(r.x + r.width - ox + 4 + (p.dx || 0))
@@ -107,6 +109,19 @@ async function guideFrames(set, width = 680) {
     frames[name] = frame.id
   }
   return frames
+}
+
+// Puts a pin in the Dark mode of the UI3 Colors collection, which its fills are bound to, so it reads
+// as a dark pin on any background.
+async function darkPin(pin) {
+  for (const n of [pin, ...pin.findAll(() => true)]) {
+    const alias = n.boundVariables && n.boundVariables.fills && n.boundVariables.fills[0]
+    if (!alias) continue
+    const v = await figma.variables.getVariableByIdAsync(alias.id)
+    const c = v && (await figma.variables.getVariableCollectionByIdAsync(v.variableCollectionId))
+    const dark = c && c.modes.find((m) => m.name === 'Dark')
+    if (dark) return pin.setExplicitVariableModeForCollection(c, dark.modeId)
+  }
 }
 
 // The image set's `pins` boolean property, added on first use and bound to the pins of a set built
