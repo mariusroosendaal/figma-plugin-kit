@@ -18,10 +18,10 @@ A guide explains how a plugin works, screen by screen, to the designers who use 
 - Under it, a `###` per view (Sidebar, Table, Preview, Review) where there are several. Each view is:
   1. The image, `![](<file>.svg)`, alone on its line.
   2. One line on what the view shows, when the heading doesn't already say it.
-  3. A numbered list that matches the pins on the image: `1. **<UI label>**—what it does.`
+  3. A numbered list that matches the pins on the image: `1. **<UI label>**: what it does.`
   4. A closing line for the primary action: `Click **<button label>** to <result>. Press Ctrl/Cmd+Z to undo.`
 - Mention states that don't earn an image (empty selection, errors) in one sentence at the end of the section.
-- A guide with several large tabs goes in parts. `GUIDE.md` keeps the title and the intro, and lists the parts as `1. **<Tab>**—what it covers.`, without links: Markdown Docs takes only absolute URLs, and a relative link fails the whole file. Each part is `docs/guide-<tab>.md`, with `# <Tab>` and a `##` per view. A tab's settings go in its part, under `## Settings`; the first-run setup and anything for the whole plugin get a part of their own.
+- A guide with several large tabs goes in parts. `GUIDE.md` keeps the title and the intro, and lists the parts as `1. **<Tab>**: what it covers.`, without links: Markdown Docs takes only absolute URLs, and a relative link fails the whole file. Each part is `docs/guide-<tab>.md`, with `# <Tab>` and a `##` per view. A tab's settings go in its part, under `## Settings`; the first-run setup and anything for the whole plugin get a part of their own.
 
 ## Length budget
 
@@ -41,7 +41,7 @@ The readers are designers, many reading in a second language. Plainness is a cor
 - **Reassure before a big change.** Before a bulk or destructive action, say what stays safe: nothing changes until the reader clicks the button, edits stay private until written, Ctrl/Cmd+Z undoes it. A reason that frees the reader to experiment is welcome ("so you can try things freely").
 - **Write rules as help.** Matching rules, limits and edge cases go in an "If … " line that starts from what the reader sees and ends with what to do: "If a match looks wrong, check the names. … For any other icon, pick the right one from the dropdown."
 - **Common contractions are fine**: don't, isn't, can't, it's, you're. Skip the rarer ones (you'd, it'll, there'd).
-- **One em dash per sentence**, only after a bold label in a list item. Elsewhere use a colon, a full stop or parentheses. No spaces around it: `**Scale**—the sizes`, not `**Scale** — the sizes`.
+- **A colon after a bold label in a list item**: `**Scale**: the sizes`, not `**Scale**—the sizes`. Keep it the only colon in that sentence. Elsewhere an em dash is fine, one per sentence, with no spaces around it: `the sizes—and only those`, not `the sizes — and only those`.
 - **Current state only.** No history, no "new", no changelog. No claims about the reader ("the most common mistake").
 - **Describe only what the image shows.** An item names a control or area that is visible in the mockup and says what it does. A visible button can get one clause for what it opens ("generates the sizes from a formula"), and a visible dropdown can name its options and what each one does (**Create new collection…** creates `responsive`). Don't describe anything else the image doesn't show: the contents of a dialog, popover, menu or editor that is closed in the mockup, or a state it isn't in. Give that screen its own image, or leave it out.
 - **Every claim traces to code.** Limits, rules and side effects come from reading `code.ts` (for example the characters a name can't contain), not from labels or guesses. Where code and copy disagree, describe what the code does and tell the user about the mismatch.
@@ -77,13 +77,18 @@ The `icon` frame holds a flattened copy of the variant: one white vector over th
 
 ## Publishing
 
-Once the images are framed, sync `GUIDE.md` and its parts into Figma documents on the plugin's page, with Markdown Docs' own sync code. `sync-docs.js`, next to this file, is that code bundled for `use_figma`: paste it whole (its lines that end in `\` continue a string), then end the call with:
+Once the images are framed, sync `GUIDE.md` and its parts into Figma documents on the plugin's page, with Markdown Docs' own sync code. `sync-docs.js`, next to this file, is that code bundled for `use_figma`. Each guide file keeps a copy in its root's shared plugin data, so a sync sends only the Markdown. Start the call with the bundle's hash, `shasum sync-docs.js | cut -c1-12`:
 
 ```js
+const hash = figma.root.getSharedPluginData('markdown_docs', 'agentBundleHash')
+if (hash !== '<hash>') return { stale: true, stored: hash }
+const MarkdownDocs = (0, eval)('(' + figma.root.getSharedPluginData('markdown_docs', 'agentBundle') + ')')()
 await figma.setCurrentPageAsync(await figma.getNodeByIdAsync('<page id>'))
 return await MarkdownDocs.syncDocs([{ name: 'GUIDE.md', markdown: <the file, as a JSON string> }])
 ```
 
-Pass each part as one more `{ name, markdown }`, named like its file; when the parts don't fit in one call (about 19 KB of Markdown with the bundle), send them in several. Each file finds its document as the plugin's **Sync design docs** does (by the stamp a sync left, then by its first heading), rebuilds it in place, and creates one beside the others when nothing matches; the result names what it rebuilt, created or couldn't do. `{ onlyChanged: true }` as a second argument skips the files that haven't changed since their last sync. The user can still run **Sync design docs** themselves; both find the same documents. Rebuild the bundle with `npm run build:agent` in `Markdown Docs` after changing its sync.
+When it returns `stale`, the file has an older copy or none: store the current one in a call of its own. Wrap `sync-docs.js`, pasted whole (its lines that end in `\` continue a string), in `function __md(){ … return MarkdownDocs }`, then end the call with `figma.root.setSharedPluginData('markdown_docs', 'agentBundle', __md.toString())` and the same for `agentBundleHash` with the hash. The guides file (`32BXCiwUt7nixe5HKsmBfG`) has one; the UI3 file stores its own the first time a guide there syncs.
+
+Pass each part as one more `{ name, markdown }`, named like its file; a call takes about 45 KB of Markdown. Each file finds its document as the plugin's **Sync design docs** does (by the stamp a sync left, then by its first heading), rebuilds it in place, and creates one beside the others when nothing matches; the result names what it rebuilt, created or couldn't do. `{ onlyChanged: true }` as a second argument skips the files that haven't changed since their last sync. The user can still run **Sync design docs** themselves; both find the same documents. Rebuild the bundle with `npm run build:agent` in `Markdown Docs` after changing its sync.
 
 Each image line takes a copy of the frame of the same name from that page, in a wide block when the frame is wider than 680px, so the documents need no image placed by hand, and a rebuilt variant shows through. `npm run notion-zip -- "<Plugin>" --export` renders the frames as SVG files next to `GUIDE.md`, named like its image references, and packs the guide for Notion's Markdown import, with its parts. Without `--export` it packs the SVGs already there. Commit the SVGs with the guide: GitHub shows them in `GUIDE.md` as they are, and `npm run notion-sync -- "<Plugin>"` uploads them with the guide to its Notion page. After a guide's first sync, link that page from the README: in a line under the **Usage** steps, which `figma-copy` carries into the Community description with its address. Link its page on `figma-plugins.notion.site`. The frames also export as PNG at 2x, for anywhere that takes no SVG. Keep each image reference alone on its line, and keep the file names stable, since the plugin matches images by file name.
