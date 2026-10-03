@@ -23,7 +23,7 @@ import {
   EmptyState, ListItem, LoadingState, FieldGroup, CheckboxCard, Section, DataTable,
   FieldGrid, SteppedField, LadderBadges, CodeExportModal, RampCurve, MappingChip,
   sendToPlugin, createMessageHandler,
-  rgbToHex, hexToRgb, getLuminance, getContrastRatio, meetsContrastLevel,
+  rgbToHex, hexToRgb, isValidHex, getLuminance, getContrastRatio, meetsContrastLevel,
   validateUrl, validateJsonString, sanitizeInput, sanitizeName,
   validateEmail, validateNumber, isEmpty,
   formatErrorMessage, handleAsyncError, createUserErrorMessage,
@@ -35,10 +35,22 @@ import {
 // Figma-sandbox helpers (use in code.ts only, not in UI)
 import {
   sendToUI, showError, showSuccess, focusNodes, loadFont,
+  fontsOf, loadFontOnce, loadNodeFonts, setText,
   getCollections, getVariables, getSelection, handleResize,
-  saveToStorage, loadFromStorage,
+  saveToStorage, loadFromStorage, createSettingsStore,
 } from "figma-plugin-utilities/lib/figma-helpers";
+
+// Variable helpers (code.ts only)
+import {
+  isVariableAlias, isColorValue, toRgba, getVariableLookup,
+  resolveVariableValue, resolveVariableValueAsync,
+} from "figma-plugin-utilities/lib/figma-variables";
+
+// Color utilities from code.ts (the same functions the root exports to the UI)
+import { rgbToHex, isValidHex } from "figma-plugin-utilities/lib/colors";
 ```
+
+A plugin that builds both threads in one Vite pass (`"build": "vite build"`) must not import the same module from both: Vite splits it into a chunk `code.js` can't load. Use `lib/colors` from one thread only, and keep a local copy in the other if it needs one.
 
 ---
 
@@ -79,7 +91,7 @@ Top bar with optional `left`, `center` and `right` slots.
 <Header title="Settings" noBorder />
 ```
 
-Props: `title`, `noBorder`, `className`. Slots: `left`, `center`, `right`. The left padding is 16px, and 8px when the `left` slot has content (tabs, buttons), whose own padding insets them.
+Props: `title`, `noBorder`, `level` (the title's heading level, 1 by default; 2 or 3 for a bar inside a panel or modal), `className`. Slots: `left`, `center`, `right`. The left padding is 16px, and 8px when the `left` slot has content (tabs, buttons), whose own padding insets them.
 
 ---
 
@@ -491,11 +503,17 @@ window.onmessage = createMessageHandler({
 ## Color utilities
 
 ```javascript
-import { hexToRgb, rgbToHex, getLuminance, getContrastRatio, meetsContrastLevel } from "figma-plugin-utilities";
+import { hexToRgb, rgbToHex, isValidHex, getLuminance, getContrastRatio, meetsContrastLevel } from "figma-plugin-utilities";
+// In code.ts: from "figma-plugin-utilities/lib/colors"
 
 // Figma uses 0–1 float range for RGB
 const rgb = hexToRgb("#FF0000");       // { r: 1, g: 0, b: 0 }, or null if the hex is malformed
-const hex = rgbToHex({ r: 1, g: 0, b: 0 });  // "#FF0000"
+const hex = rgbToHex({ r: 1, g: 0, b: 0 });  // "#FF0000" — channels are clamped to 0–1
+rgbToHex({ r: 1, g: 0, b: 0, a: 0.5 }, { lowercase: true, alpha: true });  // "#ff000080"
+rgbToHex(color, { hash: false });      // "FF0000"
+
+isValidHex("#ff0000");                 // true — six digits, either case
+isValidHex("ff0000", { requireHash: false });  // true
 
 // Luminance (0–1, used to compute contrast)
 const lum = getLuminance({ r: 1, g: 0, b: 0 });
@@ -696,6 +714,42 @@ await loadFont("Inter", "Regular");
 await loadFont("Inter", "Bold");
 ```
 
+### `fontsOf` / `loadFontOnce` / `loadNodeFonts` / `setText`
+
+Figma refuses to write to text whose fonts aren't loaded. These write in the layer's own fonts, whatever the library uses, and load each font once per run: hundreds of cells wait once per font, not a round trip each.
+
+```typescript
+import { setText, loadNodeFonts, loadFontOnce, fontsOf } from "figma-plugin-utilities/lib/figma-helpers";
+
+await setText(cell, "16px");          // loads the node's fonts, then sets its characters
+await loadNodeFonts(node);            // before deleteCharacters, setRangeFontName…
+await loadFontOnce({ family: "Inter", style: "Bold" });
+fontsOf(node);                        // the node's font, or each run's when mixed
+```
+
+All reject when a font won't load (a missing font), leaving the text as it was; a failed load is forgotten, so the next call tries again. Wrap them where a plugin wants a boolean, a fallback font or its own error.
+
+### `createSettingsStore`
+
+Settings in clientStorage, cleaned by one function on load and on save, so what a plugin saves is always what it would load. `sanitize` takes anything — a value an older version stored, a message from the UI, `undefined` on first run — and returns complete settings.
+
+```typescript
+import { createSettingsStore } from "figma-plugin-utilities/lib/figma-helpers";
+
+const settings = createSettingsStore("settings", (raw) => {
+  const r = (raw ?? {}) as Partial<Settings>;
+  return {
+    width: typeof r.width === "number" && r.width > 0 ? r.width : 300,
+    includeAll: typeof r.includeAll === "boolean" ? r.includeAll : false,
+  };
+});
+
+sendToUI("SETTINGS", { settings: await settings.load() });
+const saved = await settings.save({ ...current, ...msg.patch }); // merge a partial update first
+```
+
+Storage errors are logged, not thrown; a failed load returns `sanitize(undefined)`.
+
 ### `saveToStorage` / `loadFromStorage`
 
 ```typescript
@@ -706,6 +760,30 @@ await saveToStorage("settings", { width: 300, includeAll: true });
 // Second argument is the default value if nothing is stored yet
 const settings = await loadFromStorage("settings", { width: 300, includeAll: false });
 ```
+
+---
+
+## Variable helpers (`lib/figma-variables`, code.ts only)
+
+```typescript
+import {
+  isVariableAlias, isColorValue, toRgba,
+  getVariableLookup, resolveVariableValue, resolveVariableValueAsync,
+} from "figma-plugin-utilities/lib/figma-variables";
+
+isVariableAlias(value);   // value is VariableAlias
+isColorValue(value);      // value is RGB | RGBA
+toRgba(value);            // RGBA with a: 1 where it has none, or null
+
+// Many lookups: read the local variables and collections once
+const lookup = await getVariableLookup();   // { variables, collections }, maps by id
+const size = resolveVariableValue(variable, modeId, lookup);   // sync, local only
+
+// Through enabled libraries too: fetches what the lookup lacks (or everything, without one)
+const color = toRgba(await resolveVariableValueAsync(alias, null));
+```
+
+Both follow aliases to a value that isn't one, starting from a variable or an alias. `modeId` null reads the default mode. Each variable down the chain is read at the same mode where its collection has it — an alias within one collection — and at its own default mode otherwise. They return `VariableValue | null`, null where the chain leaves the file (sync) or runs past `maxDepth` (10), so check the type: `typeof v === "number"`, `toRgba(v)`.
 
 ---
 
