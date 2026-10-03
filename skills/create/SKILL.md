@@ -199,10 +199,19 @@ text.characters = "Hello";
 ### Client storage (persist settings)
 
 ```typescript
-import { saveToStorage, loadFromStorage } from "figma-plugin-utilities/lib/figma-helpers";
+import { createSettingsStore } from "figma-plugin-utilities/lib/figma-helpers";
 
-await saveToStorage("settings", { theme: "dark", width: 300 });
-const settings = await loadFromStorage("settings", { theme: "light", width: 300 });
+// One sanitize for both directions: what's saved is what a load accepts
+const store = createSettingsStore("settings", (raw) => {
+  const r = (raw ?? {}) as Partial<Settings>;
+  return {
+    theme: r.theme === "dark" ? "dark" : "light",
+    width: typeof r.width === "number" && r.width > 0 ? r.width : 300,
+  };
+});
+
+const settings = await store.load();
+await store.save({ ...settings, theme: "dark" });
 ```
 
 ### Async API reference — use these, not their deprecated sync equivalents
@@ -294,15 +303,11 @@ Only use `figma.loadAllPagesAsync()` when the operation genuinely needs every pa
 All user-configurable toggles, dropdowns, and inputs can, depending on the scenario, be saved to `clientStorage`and restored on open. State that resets every session feels broken:
 
 ```typescript
-// On open — restore with defaults
-const settings = await loadFromStorage("settings", {
-  prefix: "",
-  mode: "replace",
-  onlyComponents: false,
-});
+// On open — restore, with the sanitize's defaults for anything missing
+const settings = await store.load();   // createSettingsStore, above
 
-// On change — persist immediately
-await saveToStorage("settings", { ...settings, prefix: newPrefix });
+// On change — persist immediately; merge a partial update first
+await store.save({ ...settings, prefix: newPrefix });
 ```
 
 ### UI loading state — set isLoading before dispatch, not after

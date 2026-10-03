@@ -28,7 +28,6 @@ import {
   validateEmail, validateNumber, isEmpty,
   formatErrorMessage, handleAsyncError, createUserErrorMessage,
   logError, withErrorHandling, safeAsync, parseJsonSafe,
-  notifyError, notifySuccess, notifyWarning,
   setDefaultWidth, getContentHeight, resizeToFit, autoResize,
 } from "figma-plugin-utilities";
 
@@ -36,8 +35,7 @@ import {
 import {
   sendToUI, showError, showSuccess, focusNodes, loadFont,
   fontsOf, loadFontOnce, loadNodeFonts, setText,
-  getCollections, getVariables, getSelection, handleResize,
-  saveToStorage, loadFromStorage, createSettingsStore,
+  handleResize, createSettingsStore,
 } from "figma-plugin-utilities/lib/figma-helpers";
 
 // Variable helpers (code.ts only)
@@ -598,18 +596,6 @@ const variables = await withErrorHandling(() => createVariables(data), "Creating
 
 ---
 
-## Notification utilities
-
-```javascript
-import { notifyError, notifySuccess, notifyWarning } from "figma-plugin-utilities";
-
-notifySuccess("Saved settings successfully");
-notifyWarning("Using fallback colors");
-notifyError("Failed to load variables");
-```
-
----
-
 ## Resize utilities
 
 Auto-resize the plugin window to fit content. The UI sends a `"resize"` message; `handleResize` in `code.ts` applies it.
@@ -667,24 +653,6 @@ showError("Select at least one frame");   // default 5s timeout
 showSuccess("Variables created!", 3000);
 ```
 
-### `getCollections` / `getVariables`
-
-```typescript
-import { getCollections, getVariables } from "figma-plugin-utilities/lib/figma-helpers";
-
-const collections = await getCollections();  // VariableCollection[]
-const colorVars = await getVariables("COLOR");  // Variable[] — type is optional
-```
-
-### `getSelection`
-
-```typescript
-import { getSelection } from "figma-plugin-utilities/lib/figma-helpers";
-
-const all = getSelection();                          // all selected nodes
-const frames = getSelection<FrameNode>("FRAME");     // filtered by type
-```
-
 ### `handleResize`
 
 ```typescript
@@ -710,7 +678,7 @@ focusNodes([specificNode]);
 ```typescript
 import { loadFont } from "figma-plugin-utilities/lib/figma-helpers";
 
-await loadFont("Inter", "Regular");
+await loadFont("Inter", "Regular");   // once per run, as loadFontOnce
 await loadFont("Inter", "Bold");
 ```
 
@@ -749,17 +717,6 @@ const saved = await settings.save({ ...current, ...msg.patch }); // merge a part
 ```
 
 Storage errors are logged, not thrown; a failed load returns `sanitize(undefined)`.
-
-### `saveToStorage` / `loadFromStorage`
-
-```typescript
-import { saveToStorage, loadFromStorage } from "figma-plugin-utilities/lib/figma-helpers";
-
-await saveToStorage("settings", { width: 300, includeAll: true });
-
-// Second argument is the default value if nothing is stored yet
-const settings = await loadFromStorage("settings", { width: 300, includeAll: false });
-```
 
 ---
 
