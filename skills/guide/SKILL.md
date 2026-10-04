@@ -1,5 +1,5 @@
 ---
-description: "Write a short user guide for a plugin (GUIDE.md) with annotated mockups of its key screens in Figma. Use when asked for a guide, how-to or walkthrough of a plugin, or to explain how a plugin works to its users. Usage: /figma-plugin-kit:guide [plugin]"
+description: "Write a short user guide for a plugin (GUIDE.md) with annotated mockups of its key screens in Figma. Use when asked for a guide, how-to or walkthrough of a plugin, or to explain how a plugin works to its users, and before any edit to an existing guide (docs/GUIDE.md, docs/guide-*.md), such as updating it after a UI change. Usage: /figma-plugin-kit:guide [plugin]"
 ---
 
 # Plugin user guides
