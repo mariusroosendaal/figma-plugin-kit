@@ -24,6 +24,7 @@ import {
   FieldGrid, SteppedField, LadderBadges, CodeExportModal, RampCurve, MappingChip,
   sendToPlugin, createMessageHandler,
   rgbToHex, hexToRgb, isValidHex, getLuminance, getContrastRatio, meetsContrastLevel,
+  plural, joinList,
   validateUrl, validateJsonString, sanitizeInput, sanitizeName,
   validateEmail, validateNumber, isEmpty,
   formatErrorMessage, handleAsyncError, createUserErrorMessage,
@@ -44,11 +45,12 @@ import {
   resolveVariableValue, resolveVariableValueAsync,
 } from "figma-plugin-utilities/lib/figma-variables";
 
-// Color utilities from code.ts (the same functions the root exports to the UI)
+// Color and copy utilities from code.ts (the same functions the root exports to the UI)
 import { rgbToHex, isValidHex } from "figma-plugin-utilities/lib/colors";
+import { plural, joinList } from "figma-plugin-utilities/lib/format";
 ```
 
-A plugin that builds both threads in one Vite pass (`"build": "vite build"`) must not import the same module from both: Vite splits it into a chunk `code.js` can't load. Use `lib/colors` from one thread only, and keep a local copy in the other if it needs one.
+A plugin that builds both threads in one Vite pass (`"build": "vite build"`) must not import the same module from both: Vite splits it into a chunk `code.js` can't load. Use `lib/colors` or `lib/format` from one thread only, or build each thread on its own (`"build": "vite build && vite build --mode code"`, as Vitrine Tools and Apply Content do).
 
 ---
 
@@ -520,6 +522,20 @@ const lum = getLuminance({ r: 1, g: 0, b: 0 });
 const ratio = getContrastRatio(color1, color2);  // e.g. 4.5
 const passes = meetsContrastLevel(ratio, "AA");  // true / false
 // Levels: "AA" (4.5:1), "AAA" (7:1), "AA-large" (3:1), "AAA-large" (4.5:1)
+```
+
+---
+
+## Copy utilities
+
+```javascript
+import { plural, joinList } from "figma-plugin-utilities";
+// In code.ts: from "figma-plugin-utilities/lib/format"
+
+plural(1, "layer");                    // "1 layer"
+plural(3, "entry", "entries");         // "3 entries"
+joinList(["a", "b", "c"]);             // "a, b and c"
+joinList(["a", "b"], "or");            // "a or b"
 ```
 
 ---
