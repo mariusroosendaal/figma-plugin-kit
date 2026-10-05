@@ -4,49 +4,91 @@ description: "Write a short user guide for a plugin (GUIDE.md) with annotated mo
 
 # Plugin user guides
 
-A guide explains how a plugin works, screen by screen, to the designers who use it. It is a Markdown file, `<Plugin>/docs/GUIDE.md`, with an annotated mockup of each key screen. The README says what the plugin is and how to build it; the guide says what each control does. `Vitrine Tools/docs/` (large, in parts) and `Batch Rename Variants/docs/GUIDE.md` (small) show the target density.
+A guide explains how a plugin works, screen by screen, to the designers who use it. It is a Markdown file, `<Plugin>/docs/GUIDE.md`, with an annotated mockup of each key screen. The README says what the plugin is and how to build it; the guide says what each control does. `Canvas Organizer/docs/GUIDE.md` is the reference for length and tone; `Vitrine Tools/docs/` shows a guide in parts.
 
 ## Inputs
 
 - **The plugin folder.** Read `src/PluginUI.svelte`, its child components and `src/code.ts` before writing a line.
-- **A Figma page for the images**, in the UI3 file (`6dJFbL7SDC7kkS1fu3AHH6`). Each plugin has its own page, named after it. Ask for the URL if the user doesn't give one.
+- **A Figma page for the images**, named after the plugin, in the guides file (`32BXCiwUt7nixe5HKsmBfG`); Vitrine Tools has its page in the UI3 file (`6dJFbL7SDC7kkS1fu3AHH6`). Ask for the URL if the user doesn't give one.
 
 ## Structure
 
-- `# <Plugin>`, then an intro of two or three sentences: what the reader gets from the plugin, with one concrete example, then the main idea it turns on. Start from the reader's task ("Icon Swapper moves a file from one icon collection to another…"), not from the mechanism.
-- One `##` per tab or task. A one-screen plugin has one `##`, named for the task ("Rename a value").
-- Under it, a `###` per view (Sidebar, Table, Preview, Review) where there are several. Each view is:
-  1. The image, `![](<file>.svg)`, alone on its line.
-  2. One line on what the view shows, when the heading doesn't already say it.
-  3. A numbered list that matches the pins on the image: `1. **<UI label>** — what it does.`
-  4. A closing line for the primary action: `Click **<button label>** to <result>. Press Ctrl/Cmd+Z to undo.`
-- Mention states that don't earn an image (empty selection, errors) in one sentence at the end of the section.
-- A guide with several large tabs goes in parts. `GUIDE.md` keeps the title and the intro, and lists the parts as `1. **<Tab>** — what it covers.`, without links: Markdown Docs takes only absolute URLs, and a relative link fails the whole file. Each part is `docs/guide-<tab>.md`, with `# <Tab>` and a `##` per view. A tab's settings go in its part, under `## Settings`; the first-run setup and anything for the whole plugin get a part of their own.
+```
+# {Plugin}
+
+{Plugin} {does what} to {what}. {One concrete example with real names}.
+{Optional: one behavior the reader wouldn't guess.}
+
+## {Verb} {object}
+![]({file}.svg)
+{What to select or open}, then run the plugin.
+1. **Label** — effect.
+Click **Button** to {result}. Press Ctrl/Cmd+Z to undo.
+{At most two short paragraphs: what the reader wouldn't guess, "If X, do Y."}
+
+## Settings
+{How to open them.} Click **Save** to keep them for your next run.
+### {Tab}
+![]({file}.svg)
+1. **Label** — effect.
+```
+
+- **Intro**: two or three sentences, 45 words at most. Start from the reader's task ("Icon Swapper moves a file from one icon collection to another…"), not from the mechanism, and give one example with real names.
+- **No install link or contents.** `notion-sync` opens the Notion page with the Community link from `scripts/figma-community.json`, and adds a table of contents when the page has two or more `##`.
+- **Headings**: a `##` per task, verb + object ("Swap icons", "Generate a grid"), and `## Settings`. A `###` per view, tab or dialog where a task has several, named by its UI label (Sidebar, Table, Add images).
+- **The line before the list** says what to select or open first. Leave it out when there's nothing to do first.
+- **The list** matches the pins on the image: `1. **<UI label>** — what it does.`, lowercase after the dash.
+- **One Click line per task**, then the undo line. States that don't earn an image (empty selection, errors) and limits go after it as "If X, do Y.", never in a troubleshooting section of their own.
+- **A guide with several large tabs goes in parts.** `GUIDE.md` keeps the title and the intro, and lists the parts as `1. **<Tab>** — what it covers.`, without links: Markdown Docs takes only absolute URLs, and a relative link fails the whole file. Each part is `docs/guide-<tab>.md`, with `# <Tab>` and a `##` per view. A tab's settings go in its part, under `## Settings`; the first-run setup and anything for the whole plugin get a part of their own.
 
 ## Length budget
 
-- About one screen per tab. Cut anything that restates the image, the heading or another item.
-- Three or four pins per image. More means the image needs to be split, or some controls don't need an item. A screen with one field can have none, and prose in place of the list.
+The guides' sentences are already short. A guide runs long from extra sentences, so cut sentences; don't pack two into one.
+
+| Part | Target |
+| --- | --- |
+| Intro | 2–3 sentences, 45 words at most |
+| Numbered item | 1 sentence, 20 words at most; a second only when it prevents a mistake |
+| After the Click line | 2 short paragraphs at most |
+| Whole guide | 30–45 words per numbered item; a one-task guide under 250 words |
+
+Count with `wc -w`. An item over budget is two items, or its detail belongs after the Click line.
+
+- Three or four pins per image. More means the image needs to be split, or some controls don't need an item. A screen with one field can have none, and prose in place of the list. A pin on something that only reports (a counter, a status line) gets no item: remove the pin.
 - One example per idea. Don't list every value of a scale or every option of a long list; describe the pattern and name one.
+
+### Cut these
+
+- **Restating the label.** Say only the effect or the condition the label doesn't.
+- **What the image shows.** Counts, lists and what's in them are visible.
+- **Post-run choreography.** "Places the frame, selects it and closes" → where the result lands, or nothing.
+- **Reasons the reader doesn't need.** Drop "since…" and "so you can…", unless the reason prevents a mistake.
+- **Saying it twice.** If the intro explains it, the section doesn't.
+
+| Before | After |
+| --- | --- |
+| When you change the mapping, **Save changes** takes the place of **Apply data**: click it to keep the mapping. A new mapping asks for a name first. Saving doesn't change your design: only applying the data does. If you leave with unsaved changes, the plugin asks before it discards them. | Click **Save changes** to keep the mapping. Saving doesn't change your design; applying the data does. |
+| The two x values, the first and the third, must be between 0 and 1, since they're points in time. The y values can be outside that range, for a curve that overshoots. | The x values must be between 0 and 1. The y values can go outside it, for an overshoot. |
+| It's green when it equals **Max width**, and red when the rounding changes the width. If it's red, change a value until it's green. | Green means it matches **Max width**. If it's red, adjust a value. |
 
 ## Writing
 
 The readers are designers, many reading in a second language. Plainness is a correctness requirement. Plain doesn't mean cold: write as a colleague showing the plugin to someone at their desk, in short, simple sentences.
 
-- **Use the UI's own labels, in bold, exactly as the code has them.** Quote names and values from the file in code style: `heading/1/sm-lg`, `size=sm`. Drop the count from a label that changes with the reader's file: "Click **Swap icons**", not "Click **Swap 114 icons**". Say what the count means only when it helps: "The button shows how many layers change."
-- **Name the reader's own content by what it is, not by the example in the image.** A row, set, layer name or value that shows the reader's data reads differently in their file, so call it by its kind: "**Text set** — a set's name and its number of lines", not "**Prices** — a text set". The same goes for a pin's list item. Keep the example for the intro or an "If … " line, in code style: "every `title` layer gets the next headline".
+- **Use the UI's own labels, in bold, exactly as the code has them.** Quote layer names, variable names and typed values in code style: `heading/1/sm-lg`, `size=sm`. Drop the count from a label that changes with the reader's file: "Click **Swap icons**", not "Click **Swap 114 icons**".
+- **Name the reader's own content by what it is, not by the example in the image.** A row, set, layer name or value that shows the reader's data reads differently in their file, so call it by its kind: "**Text set** — click it to edit it", not "**Prices** — a text set". Keep the example for the intro or an "If … " line, in code style: "every `title` layer gets the next headline".
 - **One name per concept.** Pick one word for a thing (set, value, breakpoint) and keep it through the whole guide.
 - **No idiom, metaphor or phrasal verb** where a plain verb exists. Every sentence has a subject that acts. Use the imperative for what the reader does: "Click a set to open it in the table."
 - **Talk to the reader.** Make "you" the subject when the reader acts or sees something, and keep "the plugin" for what it does on its own. "High-confidence matches start checked", not "The plugin checks the matches of high confidence for you". A guide where most sentences start with "The plugin" reads like a spec.
-- **Give the reason for a surprise.** When a behavior could puzzle the reader (an empty cell, a dimmed value, rows left out), add a short clause on why: "The cell where a color meets itself stays empty, since there is nothing to compare." Skip it when the reason is obvious.
-- **Reassure before a big change.** Before a bulk or destructive action, say what stays safe: nothing changes until the reader clicks the button, edits stay private until written, Ctrl/Cmd+Z undoes it. A reason that frees the reader to experiment is welcome ("so you can try things freely").
-- **Write rules as help.** Matching rules, limits and edge cases go in an "If … " line that starts from what the reader sees and ends with what to do: "If a match looks wrong, check the names. … For any other icon, pick the right one from the dropdown."
+- **Explain a surprise, briefly.** When a behavior would look like a bug (rows left out, an empty cell), give the reason in a clause: "Text layers still named after their own text aren't listed because they aren't placeholders."
+- **The undo line is the reassurance.** Add a sentence only for what undo doesn't cover: a value stored for everyone who opens the file, edits that stay private until written.
+- **Write rules as help.** Matching rules, limits and edge cases go in an "If … " line that starts from what the reader sees and ends with what to do: "If a match looks wrong, check the names."
 - **Common contractions are fine**: don't, isn't, can't, it's, you're. Skip the rarer ones (you'd, it'll, there'd).
 - **A spaced em dash after a bold label in a list item**: `**Scale** — the sizes`, not `**Scale**—the sizes` or `**Scale**: the sizes`. Elsewhere an em dash is fine, one per sentence, with no spaces around it: `the sizes—and only those`, not `the sizes — and only those`.
 - **Current state only.** No history, no "new", no changelog. No claims about the reader ("the most common mistake").
-- **Describe only what the image shows.** An item names a control or area that is visible in the mockup and says what it does. A visible button can get one clause for what it opens ("generates the sizes from a formula"), and a visible dropdown can name its options and what each one does (**Create new collection…** creates `responsive`). Don't describe anything else the image doesn't show: the contents of a dialog, popover, menu or editor that is closed in the mockup, or a state it isn't in. Give that screen its own image, or leave it out.
+- **Describe only what the image shows.** An item names a control or area that is visible in the mockup and says what it does. A visible button can get one clause for what it opens, and a visible dropdown can name its options and what each one does (**Create new collection…** creates `responsive`). Don't describe the contents of a dialog, popover, menu or editor that is closed in the mockup, or a state it isn't in. Give that screen its own image, or leave it out.
 - **Every claim traces to code.** Limits, rules and side effects come from reading `code.ts` (for example the characters a name can't contain), not from labels or guesses. Where code and copy disagree, describe what the code does and tell the user about the mismatch.
-- US spelling ("color"), sentence case, no exclamation marks.
+- US spelling ("color"), sentence case, no exclamation marks. A serial comma: "columns, rows, and grids". Units without a space: `1440px`, `240 × 240px`.
 
 ## Images
 
