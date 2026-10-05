@@ -176,7 +176,7 @@ Props: `message`, `icon`, `actions` (array of `{ label, handler }`), `action` (a
 
 ### ListItem
 
-Selectable row with metadata slot and optional action menu.
+Selectable row with metadata slot, optional buttons and an optional action menu.
 
 ```svelte
 <script>
@@ -197,11 +197,14 @@ Selectable row with metadata slot and optional action menu.
     on:menuSelect={(e) => handleAction(e.detail.id, e.detail.action)}
   >
     <span>{item.type}</span>
+    <Button slot="actions" variant="secondary" on:click={() => fill(item)}>
+      Fill
+    </Button>
   </ListItem>
 {/each}
 ```
 
-Props: `id`, `title`, `active`, `menuItems`, `menuOpen` (bindable), `menuButtonElement` (the anchor the menu opens against), `hasBadge` (renders the `badge` slot), `class`. Slots: default (metadata), `badge`.
+Props: `id`, `title`, `active`, `menuItems`, `menuOpen` (bindable), `menuButtonElement` (the anchor the menu opens against), `hasBadge` (renders the `badge` slot), `class`. Slots: default (metadata), `badge`, `actions` (buttons inside the item after its text, outside its clickable area, so they don't fire `click`).
 Events: `click` (`detail.id`), `menuSelect` (`detail.id`, `detail.action`), `menuToggle` (`detail.id`, `detail.open`), `menuClose` (`detail.id`).
 
 ---
