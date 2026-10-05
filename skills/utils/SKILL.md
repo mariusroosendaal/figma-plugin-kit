@@ -35,7 +35,7 @@ import {
 
 // Figma-sandbox helpers (use in code.ts only, not in UI)
 import {
-  sendToUI, showError, showSuccess, focusNodes, loadFont,
+  sendToUI, showError, showNotice, showSuccess, focusNodes, loadFont,
   fontsOf, loadFontOnce, loadNodeFonts, setText,
   handleResize, createSettingsStore,
 } from "figma-plugin-utilities/lib/figma-helpers";
@@ -48,7 +48,7 @@ import {
 
 // Color and copy utilities from code.ts (the same functions the root exports to the UI)
 import { rgbToHex, isValidHex } from "figma-plugin-utilities/lib/colors";
-import { plural, joinList } from "figma-plugin-utilities/lib/format";
+import { plural, joinList, UNDO } from "figma-plugin-utilities/lib/format";
 ```
 
 A plugin that builds both threads in one Vite pass (`"build": "vite build"`) must not import the same module from both: Vite splits it into a chunk `code.js` can't load. Use `lib/colors` or `lib/format` from one thread only, or build each thread on its own (`"build": "vite build && vite build --mode code"`, as Vitrine Tools and Populate do).
@@ -686,18 +686,30 @@ These run in the plugin sandbox — import them in `code.ts`, not in Svelte UI f
 ```typescript
 import { sendToUI } from "figma-plugin-utilities/lib/figma-helpers";
 
-sendToUI("success", { message: "Variables created!" });
+sendToUI("success", { message: "Created 3 variables." });
 sendToUI("data", { items: figma.currentPage.children });
 ```
 
-### `showError` / `showSuccess`
+### `showError` / `showSuccess` / `showNotice`
 
 ```typescript
-import { showError, showSuccess } from "figma-plugin-utilities/lib/figma-helpers";
+import { showError, showNotice, showSuccess } from "figma-plugin-utilities/lib/figma-helpers";
+import { plural, UNDO } from "figma-plugin-utilities/lib/format";
 
-showError("Select at least one frame");   // default 5s timeout
-showSuccess("Variables created!", 3000);
+showError("Couldn't read the variables. Check that the file isn't view-only, then try again.");
+showNotice("Nothing to rename. Select component sets with that value.");
+showSuccess(`Created ${plural(count, "variable")}. ${UNDO}`);
 ```
+
+Pick by what happened, not by tone:
+
+| Call | When | Red |
+|---|---|---|
+| `showError` | Something failed, or the file needs fixing first | Yes |
+| `showNotice` | Nothing to do: an empty selection, nothing to change | No |
+| `showSuccess` | The change is made; end a change to the file with `UNDO` | No |
+
+Each stays up long enough to read (about 60ms a character; at least 5s, 4s and 3s). Pass a timeout only to override that. Never report a count of 0 with `showSuccess`: say why nothing happened with `showNotice`. Write "Couldn't X. Do Y." for a failure, a full sentence with a period, no "Please", no emoji or exclamation marks.
 
 ### `handleResize`
 

@@ -147,7 +147,8 @@ Only flag this if the plugin actually accesses multiple pages. Plugins that only
 - `isLoading` (or equivalent) is set to `true` at the start of every async dispatch, not just some of them
 
 ### Copy and notifications (code.ts + PluginUI.svelte)
-- `figma.notify()` strings: sentence case, no emoji (per AGENTS.md copy guidelines)
+- Notification strings: full sentences in sentence case, with a period; no "Please", "Error:" prefix, emoji or exclamation marks (per CLAUDE.md copy guidelines)
+- Notifications go through `showError` / `showNotice` / `showSuccess` from `figma-plugin-utilities/lib/figma-helpers`, not `figma.notify` with hand-picked timeouts or `figma.closePlugin(message)`
 - Button labels: verb + noun format, not generic ("Create variants" not "Generate")
 - Loading state label matches the action verb ("Creating..." not "Loading...")
 
@@ -170,11 +171,14 @@ Only flag this if the plugin actually accesses multiple pages. Plugins that only
 - The loading state cannot be triggered twice (button disabled or `isLoading` set before dispatch)
 - If an async operation can hang (e.g. variable fetch, library import), there is a timeout with a recovery message — not an infinite spinner
 
-### Result and error notifications (`figma.notify`)
-- A result of 0 is never presented the same way as success — "Swapped 0 icons" is not acceptable as a success notification; it must be an error or explain why nothing happened
-- Zero-result messages explain the most likely cause, not just the outcome
-- Success notifications for destructive or bulk operations include "Press Ctrl/Cmd+Z to undo."
-- Error messages suggest a next step — they do not just describe what went wrong
+### Result and error notifications
+- Red (`showError`) only when something failed or the file needs fixing first; nothing to do (empty selection, nothing matches, nothing changed) is a `showNotice`
+- A result of 0 is never presented as success — "Swapped 0 icons" is a `showNotice` that explains the most likely cause and what to check
+- A run that skipped or failed some items is red and names them
+- Every success that changes the file ends with `UNDO` ("Press Ctrl/Cmd+Z to undo.")
+- One notification per run: warnings raised in a loop are collected into it, not shown one by one
+- Error messages suggest a next step ("Couldn't X. Do Y.") — they do not just describe what went wrong, or point to the console
+- With the window open, an error shows in the window or as a notification, not both
 
 ### Input validation
 - Empty required text inputs block the action or produce a clear error notification — the plugin does not silently proceed and return 0 results

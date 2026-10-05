@@ -33,10 +33,22 @@ Match the action with an `-ing` form, keep it short:
 - "Creating..." for "Create variants"
 - "Importing..." for "Import variables"
 
-### Error messages
-- Be helpful, not technical
-- Suggest what to do next when possible
-- Neutral and professional tone — no exclamation marks, no emoji
+### Notifications and errors
+- Be helpful, not technical: say what happened, then what to do next
+- Full sentences with a period; no "Please", no "Error:" prefix, no exclamation marks or emoji
+- Pick the helper by what happened, never by tone (`figma-plugin-utilities/lib/figma-helpers`):
+
+| What happened | Call | Example |
+|---|---|---|
+| Something failed, or the file needs fixing first | `showError` | "Couldn't read the variable collections. Reopen the plugin to try again." |
+| Nothing to do: empty selection, nothing matches, nothing changed | `showNotice` | "Nothing to rename. Select component sets with that value." |
+| The change is made | `showSuccess` | `` `Created ${plural(count, "variable")}. ${UNDO}` `` |
+
+- A count of 0 is never a success; say why nothing happened with `showNotice`
+- End every change to the file with `UNDO` from `figma-plugin-utilities/lib/format`
+- A run that skipped or failed some items is red, and names them; collect loop warnings into that one notification
+- Let the helpers time the notification (long enough to read); don't pass a timeout or use `figma.closePlugin(message)` — notify, then close
+- With the window open, show an error in the window or as a notification, not both. Check input in the UI, under the field, and explain a disabled button with a `Tooltip`
 
 ---
 
@@ -232,13 +244,21 @@ All plugins use `"documentAccess": "dynamic-page"`. The sync versions of these A
 The `finally` block guarantees the UI unblocks even when an error is thrown mid-operation. Without it, `isLoading` stays `true` and the button stays disabled permanently.
 
 ```typescript
+import { showError, showNotice, showSuccess } from "figma-plugin-utilities/lib/figma-helpers";
+import { plural, UNDO } from "figma-plugin-utilities/lib/format";
+
 figma.ui.onmessage = async (msg) => {
   if (msg.type === "run") {
     try {
-      const result = await doWork();
-      figma.ui.postMessage({ type: "done", data: result });
+      const changed = await doWork();
+      if (changed === 0) {
+        showNotice("Nothing to resize. Select frames with an image layer.");
+      } else {
+        showSuccess(`Resized ${plural(changed, "frame")}. ${UNDO}`);
+      }
     } catch (err) {
-      figma.ui.postMessage({ type: "error", message: String(err) });
+      console.error("Run failed:", err); // the details go to the console, not the user
+      showError("Couldn't resize the frames. Press Ctrl/Cmd+Z to undo anything half-made, then try again.");
     } finally {
       figma.ui.postMessage({ type: "complete" }); // always unblocks the UI
     }
