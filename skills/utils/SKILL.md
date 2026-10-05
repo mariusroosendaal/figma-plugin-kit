@@ -50,7 +50,7 @@ import { rgbToHex, isValidHex } from "figma-plugin-utilities/lib/colors";
 import { plural, joinList } from "figma-plugin-utilities/lib/format";
 ```
 
-A plugin that builds both threads in one Vite pass (`"build": "vite build"`) must not import the same module from both: Vite splits it into a chunk `code.js` can't load. Use `lib/colors` or `lib/format` from one thread only, or build each thread on its own (`"build": "vite build && vite build --mode code"`, as Vitrine Tools and Apply Content do).
+A plugin that builds both threads in one Vite pass (`"build": "vite build"`) must not import the same module from both: Vite splits it into a chunk `code.js` can't load. Use `lib/colors` or `lib/format` from one thread only, or build each thread on its own (`"build": "vite build && vite build --mode code"`, as Vitrine Tools and Populate do).
 
 ---
 
