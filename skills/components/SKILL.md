@@ -26,6 +26,7 @@ import {
   Chip,
   Chit,
   ColorInput,
+  ColorPicker,
   Disclosure,
   DisclosureItem,
   Dropdown,
@@ -243,9 +244,35 @@ Props: `label`, `selected`, `onSelected` (inside a selected field or row), `mute
 <ColorInput value="#FF24BD" variable="bg-assistive" />
 ```
 
-Props: `value` (`#RRGGBB`), `opacity` (0–100; `null` hides the opacity cell), `variable` (bound variable name, shown instead of the hex), `pickable` (chit opens the system picker; default `true`), `disabled`, `id`, `ariaLabel`. Events: `change` and `input` (picker drag) with `{ value, opacity }`.
+Props: `value` (`#RRGGBB`), `opacity` (0–100; `null` hides the opacity cell), `variable` (bound variable name, shown instead of the hex), `pickable` (chit opens a picker; default `true`), `picker` (`"system"`, the default, or `"panel"` for the kit's ColorPicker), `swatches` (the panel's, as ColorPicker's), `disabled`, `id`, `ariaLabel`. Events: `change` and `input` (picker drag) with `{ value, opacity }`.
 
 The hex field takes 3, 6 or 8 digits with or without `#`; 8 digits also set the opacity.
+
+---
+
+### ColorPicker
+
+```svelte
+<script>
+  let anchor;
+  let open = false;
+</script>
+
+<button bind:this={anchor} on:click={() => (open = !open)}>Pick</button>
+<ColorPicker
+  bind:isOpen={open}
+  anchorElement={anchor}
+  bind:value={hex}
+  bind:opacity
+  swatches={[{ label: 'On this page', colors: pageColors }]}
+  on:change={(e) => apply(e.detail)}
+/>
+<ColorPicker inline value="#0D99FF" opacity={null} />
+```
+
+Props: `value` (`#RRGGBB`), `opacity` (0–100; `null` leaves out the opacity slider and field), `isOpen`, `anchorElement` (what it floats by), `inline` (drawn in the flow, always open), `format` (`"hex"` | `"rgb"` | `"css"` | `"hsl"` | `"hsb"`; bindable), `swatches`, `title` (the dialog's hidden title; default `"Color picker"`), `class`. Events: `input` while dragging, `change` when a drag ends or a field, swatch, key or the eyedropper sets a color, both with `{ value, opacity }`; `close`.
+
+Figma's picker, its Custom tab: 240px wide, the square, hue and opacity sliders, eyedropper, format fields and swatches. It sits below the anchor, or above when there's no room, and closes on X, Escape or a click outside; Escape in a field only undoes the field. `swatches` takes colors (`'#RRGGBB'`, `'#RRGGBBAA'`, any CSS color, `{ color, opacity?, label? }`), or `{ label, colors }` sets switched by a dropdown. The plugin collects them in `code.ts` — the UI can't see the document. The eyedropper is the browser's `EyeDropper` and is left out where there is none. For a color field, `ColorInput picker="panel"` wires it up.
 
 ---
 
