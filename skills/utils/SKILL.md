@@ -22,6 +22,7 @@ import {
   PluginLayout, Header, Footer, StatusBar,
   EmptyState, ListItem, LoadingState, FieldGroup, CheckboxCard, Section, DataTable,
   FieldGrid, SteppedField, LadderBadges, CodeExportModal, RampCurve, MappingChip,
+  ConfirmModal, confirmAction, confirmDiscardChanges,
   sendToPlugin, createMessageHandler,
   rgbToHex, hexToRgb, isValidHex, getLuminance, getContrastRatio, meetsContrastLevel,
   plural, joinList,
@@ -438,6 +439,32 @@ Read-only code in a `Modal` with a primary copy button in the footer. The button
 ```
 
 Props: `isOpen`, `title`, `value`, `ariaLabel` (names the code), `copyLabel` (verb + noun, e.g. "Copy JSON"), `position` (default `"bottom"`), `width` (`"medium"`), `height` (`"auto"`), `onClose`. Slot: `controls` (optional, above the code). The code fills the modal's height.
+
+---
+
+### ConfirmModal
+
+The dialog `confirmAction()` opens, in place of the browser's `confirm()`. Mount one in the plugin's UI after everything else, so it shows above a modal that asks. `confirmAction` resolves true on confirm and false on cancel, Escape, a click outside, or when another confirmation replaces it.
+
+```svelte
+<script>
+  import { ConfirmModal, confirmAction, confirmDiscardChanges } from "figma-plugin-utilities";
+
+  async function deleteSet(set) {
+    const confirmed = await confirmAction({
+      title: "Delete set?",
+      message: `This deletes "${set.name}" from this file.`,
+      confirmLabel: "Delete set",
+      destructive: true,
+    });
+    if (confirmed) sendToPlugin("delete-set", { id: set.id });
+  }
+</script>
+
+<ConfirmModal />
+```
+
+`confirmAction` options: `title`, `message`, `confirmLabel` (verb + noun), `cancelLabel` (default "Cancel"), `destructive` (a red confirm button). `confirmDiscardChanges(message?)` is the prompt before unsaved edits go — "Discard changes?", **Keep editing** / **Discard changes** — and pairs with Modal's `beforeClose` (see the components skill). Also `answerConfirm(confirmed)` and the `confirmRequest` store, for tests; from code that can't import the root, `figma-plugin-utilities/lib/confirm`.
 
 ---
 

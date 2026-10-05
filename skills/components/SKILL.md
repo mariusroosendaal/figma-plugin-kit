@@ -589,7 +589,27 @@ Editing is yours to wire, as in UI3: on the `edit` action set `value` to the cur
 </Modal>
 ```
 
-Props: `isOpen`, `title` (also names the dialog when tabs or a header slot replace it), `width` (`"small"` 240px | `"medium"` 320px | `"large"` 480px | custom string), `height` (`"auto"` | `"50vh"` | `"80vh"` | custom string), `position` (`"center"` | `"left"` | `"right"` | `"bottom"`), `headerVariant` (`"default"` | `"navigation"` | `"tabs"`), `onBack`, `headerTabs`, `selectedTab` (bindable), `panelIds`, `backAriaLabel`, `icon2`, `icon2Name`, `icon2AriaLabel` (required whenever `icon2` is set), `footerVariant`, `footerBorder`, `showOverlay`, `closeOnOverlayClick`, `closeOnEscape`, `onClose`, `contentPadding`, `overlayPadding` (the gap the dialog keeps from the viewport), `class`. Slots: default, `header`, `footer-left`, `footer-right`, `footer-full`. Events: `close`, `back`, `tabChange`, `icon2Click`.
+Props: `isOpen`, `title` (also names the dialog when tabs or a header slot replace it), `width` (`"small"` 240px | `"medium"` 320px | `"large"` 480px | custom string), `height` (`"auto"` | `"50vh"` | `"80vh"` | custom string), `position` (`"center"` | `"left"` | `"right"` | `"bottom"`), `headerVariant` (`"default"` | `"navigation"` | `"tabs"`), `onBack`, `headerTabs`, `selectedTab` (bindable), `panelIds`, `backAriaLabel`, `icon2`, `icon2Name`, `icon2AriaLabel` (required whenever `icon2` is set), `footerVariant`, `footerBorder`, `showOverlay`, `closeOnOverlayClick`, `closeOnEscape`, `beforeClose`, `onClose`, `contentPadding`, `overlayPadding` (the gap the dialog keeps from the viewport), `class`. Slots: default, `header`, `footer-left`, `footer-right`, `footer-full`. Events: `close`, `back`, `tabChange`, `icon2Click`.
+
+`beforeClose` is asked before X, Escape or a click outside closes the modal; return false, or a promise of false, to keep it open. With edits that would be lost, ask with `confirmDiscardChanges()` from figma-plugin-utilities, and send a footer Cancel through the same check:
+
+```svelte
+<script>
+  import { ConfirmModal, confirmDiscardChanges } from "figma-plugin-utilities";
+  const canClose = () => !dirty || confirmDiscardChanges();
+  async function cancel() {
+    if (await canClose()) isOpen = false;
+  }
+</script>
+
+<Modal bind:isOpen title="Settings" beforeClose={canClose}>
+  …
+  <Button slot="footer-right" variant="secondary" on:click={cancel}>Cancel</Button>
+</Modal>
+<ConfirmModal />
+```
+
+With modals open over each other, only the top one answers Escape and Tab.
 
 `panelIds` points each tab at its panel with `aria-controls`, which only holds if the panels are in the DOM. Leave it out when the panels are behind an `{#if}` and label them with `aria-labelledby` instead.
 
