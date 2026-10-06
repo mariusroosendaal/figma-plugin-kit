@@ -444,7 +444,7 @@ Props: `isOpen`, `title`, `value`, `ariaLabel` (names the code), `copyLabel` (ve
 
 ### ConfirmModal
 
-The dialog `confirmAction()` opens, in place of the browser's `confirm()`. Mount one in the plugin's UI after everything else, so it shows above a modal that asks. `confirmAction` resolves true on confirm and false on cancel, Escape, a click outside, or when another confirmation replaces it.
+The dialog `confirmAction()` opens, in place of the browser's `confirm()`. Mount one in the plugin's UI after everything else, so it shows above a modal that asks. In a narrow window, such as 240px, where its buttons don't fit side by side, they stack at full width, the confirming one on top. `confirmAction` resolves true on confirm and false on cancel, Escape, a click outside, or when another confirmation replaces it.
 
 ```svelte
 <script>
