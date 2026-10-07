@@ -33,6 +33,32 @@ Match the action with an `-ing` form, keep it short:
 - "Creating..." for "Create variants"
 - "Importing..." for "Import variables"
 
+### Text sizes
+Body text is `body-medium`, the window's default. `body-small` is for text that belongs to a control and reads as part of it; anything read on its own is `body-medium`.
+
+| Text | Use |
+|---|---|
+| A hint or error tied to a form field: under it, beside it, the format over it, or why a locked value can't change | `body-small`, secondary or danger |
+| Labels and headers of compact custom fields: metadata labels over values, a table's column headers, a picker's group names | `body-small`, secondary |
+| A hint beside a button, a section's one-line summary under its title ("Generated · 4px grid"), a diagram's caption | `body-small`, secondary |
+| A progress line: what it's on and the count, both the same size | `body-small` |
+| A sentence read on its own: notes under a review dialog's summary, its destination line, a disclosure's content, an empty or "nothing exported" message, a CheckboxCard description that is a sentence | `body-medium`, secondary |
+| A step counter under a large title | `body-medium`, tertiary |
+| A label over output or a log ("Output") | `body-medium-strong` |
+| A condition that limits or blocks the result: the server can't be reached, layers with missing fonts, nothing set up yet | `Banner`, not text: `danger` when nothing works, `warning` when part won't, `info` for nothing yet |
+
+Show an error once, next to what it's about; don't repeat it in another section or tab.
+
+### Review dialogs
+A dialog that confirms a write reads the same way down, every time:
+
+1. **Banners** — at most one `warning` (what to check afterwards, what won't work) and one `info` (what else the write does), their sentences merged. Never a banner inside a section.
+2. **Options** — the checkboxes. A description only when it adds a consequence or a limit the label doesn't; a label that names what it acts on ("Remove size/18, not on the scale") needs none. Hide an option that can't change anything.
+3. **Tables** — which items, and how each changes.
+4. **Summary** — a `body-medium` line per subject with its counts and where it writes ("Variables: 4 to create · 6 to overwrite, in Layout/spacing/"), below the tables.
+
+Say each fact once: a count in the summary, which items in a table, a risk in the warning, a side effect in the info banner or the option that causes it. How the tool works (rounding steps, naming patterns, what a range is) goes in the guide, not the dialog.
+
 ### Notifications and errors
 - Be helpful, not technical: say what happened, then what to do next
 - Full sentences with a period; no "Please", no "Error:" prefix, no exclamation marks or emoji

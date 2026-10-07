@@ -9,7 +9,7 @@ A guide explains how a plugin works, screen by screen, to the designers who use 
 ## Inputs
 
 - **The plugin folder.** Read `src/PluginUI.svelte`, its child components and `src/code.ts` before writing a line.
-- **A Figma page for the images**, named after the plugin, in the guides file (`32BXCiwUt7nixe5HKsmBfG`); Vitrine Tools has its page in the UI3 file (`6dJFbL7SDC7kkS1fu3AHH6`). Ask for the URL if the user doesn't give one.
+- **A Figma page for the images**, named after the plugin, in the guides file (`32BXCiwUt7nixe5HKsmBfG`). Ask for the URL if the user doesn't give one.
 
 ## Structure
 
