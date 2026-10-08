@@ -84,7 +84,7 @@ Build a Figma mockup of a plugin UI from real UI3 components, starting from a `P
 | `Header` | `title`, `noBorder` | `left`, `center`, `right` |
 | `Footer` | `variant` (`right`/`split`/`full`). Text first in `left` or last in `right` sits 16px from the edge, as in code | `children` (right/full), `left`, `right` (split) |
 | `PluginLayout` | | `children` |
-| `FieldGroup` | `label`, `size` | `children` (the control) |
+| `FieldGroup` | `label`, `size` | `children` (the control; for a `hint`, then a `Text` with `variant: 'body-small'`, `color: 'secondary'`) |
 | `EmptyState` | `message`, `size`, `icon`, `actions: [{ label }]` | |
 | `LoadingState` | `message` | |
 | `StatusBar` | `message`, `type` | |

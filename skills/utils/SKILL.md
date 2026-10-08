@@ -252,12 +252,19 @@ Label + input wrapper for forms.
   <Input bind:value={name} placeholder="e.g. Colors" />
 </FieldGroup>
 
-<FieldGroup label="Mode">
+<FieldGroup label="Mode" hint={newMode ? "Created when you save." : ""}>
   <Dropdown menuItems={modes} bind:value={selectedMode} />
+</FieldGroup>
+
+<FieldGroup label="Proxy URL" labelFor="proxy">
+  <Input id="proxy" bind:value={proxy} />
+  <svelte:fragment slot="hint">Put <code>{"{url}"}</code> where the URL goes.</svelte:fragment>
 </FieldGroup>
 ```
 
-Props: `label`, `labelFor` (renders `<label for>`, so clicking the label focuses the control — set it for `Input` and `Textarea`; a `Dropdown` is a button and cannot be targeted this way, so name it with `ariaLabel` instead), `size`.
+Props: `label`, `labelFor` (renders `<label for>`, so clicking the label focuses the control — set it for `Input` and `Textarea`; a `Dropdown` is a button and cannot be targeted this way, so name it with `ariaLabel` instead), `size`, `hint`.
+
+`hint` is the field's hint, `body-small` secondary under the control: what to enter, the format, or what the choice does. Use it rather than a `Text` after the group, so every hint sits in the same place. An empty string shows none, so give a conditional hint as a string; the `hint` slot is for markup and always shows. Errors stay on the control (`invalid` and `errorMessage` on `Input` and `Textarea`). A FieldGroup with no `label` is fine for a control whose `Section` title already names it.
 
 ---
 
