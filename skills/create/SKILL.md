@@ -38,8 +38,7 @@ Body text is `body-medium`, the window's default. `body-small` is for text that 
 
 | Text | Use |
 |---|---|
-| A hint tied to a form field: under it, beside it, the format over it, or why a locked value can't change | `body-small`, secondary: FieldGroup's `hint` |
-| A field's error | The control's `errorMessage` (`Input`, `Textarea`, `Dropdown`, `Dropzone`), `body-medium` danger. Never a `Text` of your own |
+| A field's hint and error: what to enter, the format, why a locked value can't change | FieldGroup's `hint` and the control's `errorMessage` (`Input`, `Textarea`, `Dropdown`, `Dropzone`), never a `Text` of your own. They take the label's size: `body-medium` in a default FieldGroup, `body-small` in a small one |
 | Labels and headers of compact custom fields: metadata labels over values, a table's column headers, a picker's group names | `body-small`, secondary |
 | A hint beside a button, a section's one-line summary under its title ("Generated · 4px grid"), a diagram's caption | `body-small`, secondary |
 | A progress line: what it's on and the count, both the same size | `body-small` |
