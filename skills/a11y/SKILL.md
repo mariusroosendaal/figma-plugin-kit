@@ -98,7 +98,7 @@ Pass `ariaLabel` when there is no adjacent visible label connected by `<label fo
 
 ### Input validation
 
-The `Input` component wires `aria-invalid` and `aria-describedby` automatically when you pass the `invalid` and `errorMessage` props. Use these — do not add separate error elements manually.
+The `Input` component wires `aria-invalid` and `aria-describedby` automatically when you pass the `invalid` and `errorMessage` props, and gives the message `role="alert"`; `Textarea`, `Dropdown` and `Dropzone` do the same. Use these — do not add separate error elements manually.
 
 ```svelte
 <Input
