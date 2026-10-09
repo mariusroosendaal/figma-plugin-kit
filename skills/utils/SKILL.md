@@ -51,7 +51,26 @@ import { rgbToHex, isValidHex } from "figma-plugin-utilities/lib/colors";
 import { plural, joinList, UNDO } from "figma-plugin-utilities/lib/format";
 ```
 
-A plugin that builds both threads in one Vite pass (`"build": "vite build"`) must not import the same module from both: Vite splits it into a chunk `code.js` can't load. Use `lib/colors` or `lib/format` from one thread only, or build each thread on its own (`"build": "vite build && vite build --mode code"`, as Vitrine Tools and Populate do).
+## Vite config (`/vite`)
+
+Every plugin's `vite.config.ts` is the shared config: `src/index.html` and `src/code.ts` in, `dist/index.html` (CSS and JS inlined, as Figma needs), `dist/code.js` and `dist/manifest.json` out, at `es2017`.
+
+```typescript
+import { figmaPluginConfig } from "figma-plugin-utilities/vite";
+
+export default figmaPluginConfig(import.meta.url);
+```
+
+```json
+"build": "vite build && vite build --mode code",
+"dev": "vite build --watch & vite build --watch --mode code"
+```
+
+It builds each thread in its own pass, so both may import the same module: built together, Vite would split it into a chunk `code.js` can't load. Keep both commands in `build` and `dev`.
+
+`{ moduleScript: true }` inlines the UI as `<script type="module">`, which runs once the page is parsed. Without it the script is classic and runs in `<head>`, so `main.js` mounts on DOMContentLoaded, as the boilerplate's does. `ui3InlineSvg` and `inlineFigmaHtml({ root, moduleScript })` are exported too, for a config of your own.
+
+Needs `vite` and `@sveltejs/vite-plugin-svelte` installed beside it (optional peer dependencies).
 
 ---
 
@@ -814,7 +833,7 @@ Both follow aliases to a value that isn't one, starting from a variable or an al
 
 ## Scale math (`lib/scale`, both threads)
 
-Pure math for plugins that shape a scale across breakpoints (Vitrine Tools' Type and Spacing tabs): no Figma API, so the sandbox and the UI may both import it — the plugin must then build each thread in its own Vite pass (`vite build && vite build --mode code`), or the shared module becomes a chunk `code.js` can't load. Units are the caller's (px, ladder rungs…); nothing here maps values onto a ladder.
+Pure math for plugins that shape a scale across breakpoints (Vitrine Tools' Type and Spacing tabs): no Figma API, so the sandbox and the UI may both import it, which the shared [Vite config](#vite-config-vite) allows. Units are the caller's (px, ladder rungs…); nothing here maps values onto a ladder.
 
 ```typescript
 import {

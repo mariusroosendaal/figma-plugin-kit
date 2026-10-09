@@ -91,7 +91,7 @@ my-plugin/
 │   └── styles/
 │       ├── global.css                   # Reference copy only: the kit's own global.css is the one that loads
 │       └── figma-development-theme.css  # Figma theme variables
-├── vite.config.ts        # Inlines CSS+JS into a single HTML for Figma
+├── vite.config.ts        # figma-plugin-utilities/vite: one build per thread, UI inlined for Figma
 ├── tsconfig.json
 ├── package.json
 └── dist/                 # Build output (do not commit)

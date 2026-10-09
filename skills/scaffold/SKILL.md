@@ -149,7 +149,7 @@ Tell the user:
 | `src/main.js` | UI entry point (rarely needs editing) |
 | `src/index.html` | UI shell (rarely needs editing) |
 | `src/manifest.json` | Plugin metadata for Figma |
-| `vite.config.ts` | Inlines CSS + JS into a single HTML file (required by Figma) |
+| `vite.config.ts` | The shared config from `figma-plugin-utilities/vite`: builds each thread on its own and inlines the UI into one HTML file (required by Figma) |
 
 ## Packages included
 
