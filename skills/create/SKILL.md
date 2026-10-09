@@ -89,7 +89,7 @@ my-plugin/
 │   ├── index.html        # UI shell
 │   ├── manifest.json     # Plugin metadata
 │   └── styles/
-│       ├── global.css                   # UI3 Kit CSS variables
+│       ├── global.css                   # Reference copy only: the kit's own global.css is the one that loads
 │       └── figma-development-theme.css  # Figma theme variables
 ├── vite.config.ts        # Inlines CSS+JS into a single HTML for Figma
 ├── tsconfig.json
@@ -164,7 +164,7 @@ The standard layout for a plugin UI using `figma-plugin-utilities`:
   />
 
   <Footer>
-      <Button variant="primary" on:click={handleAction}>Do thing</Button>
+      <Button variant="primary" on:click={handleAction}>Create variants</Button>
   </Footer>
 </div>
 
@@ -346,7 +346,7 @@ Only use `figma.loadAllPagesAsync()` when the operation genuinely needs every pa
 
 ### Settings persistence — save all user-configurable state
 
-All user-configurable toggles, dropdowns, and inputs can, depending on the scenario, be saved to `clientStorage`and restored on open. State that resets every session feels broken:
+Save user-configurable toggles, dropdowns, and inputs to `clientStorage` and restore them on open, unless a setting belongs to one run only. State that resets every session feels broken:
 
 ```typescript
 // On open — restore, with the sanitize's defaults for anything missing

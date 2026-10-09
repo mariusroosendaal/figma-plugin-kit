@@ -153,7 +153,7 @@ Only flag this if the plugin actually accesses multiple pages. Plugins that only
 - Loading state label matches the action verb ("Creating..." not "Loading...")
 
 ### Settings persistence (code.ts)
-- All user-configurable toggles, inputs, and selections are saved to `clientStorage` and restored on open
+- User-configurable toggles, inputs, and selections are saved to `clientStorage` and restored on open, unless a setting belongs to one run only
 - No setting resets to a hardcoded default on every plugin open when the user has previously set it
 
 ---
@@ -167,7 +167,7 @@ Only flag this if the plugin actually accesses multiple pages. Plugins that only
 - The button does not become active before async loading has confirmed readiness (initial state uses `null`, not `0` or `false`, to distinguish "not yet known" from "confirmed empty")
 
 ### Loading and async feedback
-- A loading state (spinner, disabled button, or visual indicator) is shown during both the outgoing request and the incoming response — not just one of them
+- A loading state (disabled button, progress text, or `LoadingState`) is shown during both the outgoing request and the incoming response — not just one of them
 - The loading state cannot be triggered twice (button disabled or `isLoading` set before dispatch)
 - If an async operation can hang (e.g. variable fetch, library import), there is a timeout with a recovery message — not an infinite spinner
 
@@ -181,7 +181,7 @@ Only flag this if the plugin actually accesses multiple pages. Plugins that only
 - With the window open, an error shows in the window or as a notification, not both
 
 ### Input validation
-- Empty required text inputs block the action or produce a clear error notification — the plugin does not silently proceed and return 0 results
+- Empty required text inputs block the action — a disabled button with a tooltip, or `invalid` and `errorMessage` on the field — rather than a notification after the click; the plugin does not silently proceed and return 0 results
 - Inputs that control scoped operations (e.g. layer name, prefix) are validated before dispatch, not just on the plugin side
 
 ### Layout and state representation

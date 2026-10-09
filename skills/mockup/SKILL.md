@@ -89,7 +89,7 @@ Build a Figma mockup of a plugin UI from real UI3 components, starting from a `P
 | `LoadingState` | `message` | |
 | `StatusBar` | `message`, `type` | |
 | `ListItem` | `title`, `active`, `menuItems`, `hasBadge`; meta text as `children` | `actions` (buttons inside the item, after its text) |
-| `SidebarRow` | `meta`, `title`, `detail`, `message` (or `children`), `link`, `unread`, `selected`, `hover` (the Hover state, which shows the actions); `lines` isn't drawn | `lead` (Avatars by `name` and `color`, `disabled` for UI3's grey read ones, or `{ icon, color }`: two with a `link`, one without), `actions` (IconButtons or `{ icon }`, up to two) |
+| `SidebarRow` | `meta`, `title`, `detail`, `message` (or `children`), `link`, `unread`, `selected`, `hover` (the Hover state, which shows the actions); `lines` isn't drawn | `lead` (Avatars by `name` and `color`, `disabled` for UI3's gray read ones, or `{ icon, color }`: two with a `link`, one without), `actions` (IconButtons or `{ icon }`, up to two) |
 | `CheckboxCard` | `checked`, `disabled`, `secondary`; label as `children` | |
 | `Section` | `title` | `children` (the fields), `actions` (icon buttons) |
 | `FieldGrid` | `columns` (2–5) | `children` (the fields) |
@@ -105,7 +105,7 @@ Build a Figma mockup of a plugin UI from real UI3 components, starting from a `P
 | `Disclosure` | | `children` (DisclosureItems) |
 | `DisclosureItem` | `title`, `open`, `section` | `children` (shown when `open`) |
 
-`Input`, `Dropdown`, `FieldGroup`, `Banner`, `Dropzone` and the other block-level components fill the width of a vertical parent automatically. Anything else can take `fill: true`; in a horizontal parent, `grow: true` makes a component or stack take the remaining width (CSS `flex: 1` / `1fr`). `fillHeight: true` does the same vertically (e.g. an EmptyState centred in the panel), and stacks take a fixed `width`. `fill` and `stroke` on stacks take color variable names: `bg`, `bg-secondary`, `bg-brand`, `border`, `text`, `text-secondary`, `text-tertiary`, `icon-tertiary`.
+`Input`, `Dropdown`, `FieldGroup`, `Banner`, `Dropzone` and the other block-level components fill the width of a vertical parent automatically. Anything else can take `fill: true`; in a horizontal parent, `grow: true` makes a component or stack take the remaining width (CSS `flex: 1` / `1fr`). `fillHeight: true` does the same vertically (e.g. an EmptyState centered in the panel), and stacks take a fixed `width`. `fill` and `stroke` on stacks take color variable names: `bg`, `bg-secondary`, `bg-brand`, `border`, `text`, `text-secondary`, `text-tertiary`, `icon-tertiary`.
 
 ## Icons
 

@@ -51,7 +51,7 @@ Note: `FieldGroup` with a `Dropdown` child cannot use `labelFor` — buttons can
 
 ### Dropdown
 
-Always pass `ariaLabel`. The component falls back to `placeholder` if `ariaLabel` is omitted, but `placeholder` changes when a value is selected, making the control name unstable.
+Always pass `ariaLabel`. Without it the button is named by its visible text — the selected item's label, or the placeholder before a choice — which changes with the selection, making the control name unstable.
 
 ```svelte
 <!-- Wrong — control name changes when selection changes -->
@@ -233,7 +233,7 @@ The `Modal` component handles focus trap, focus return to the trigger on close, 
 
 You are responsible for:
 - Providing a `title` prop to `Modal` — this is what `aria-labelledby` points to (Modal renders `ModalHeader` internally using it)
-- Providing an `onClose` callback — Modal uses a callback prop, not a Svelte event
+- Listening for close — Modal dispatches a `close` event and also calls an `onClose` callback prop; either works
 - Triggering the modal open from a button (so focus return works correctly)
 
 ```svelte

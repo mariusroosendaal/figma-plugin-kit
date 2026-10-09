@@ -22,7 +22,7 @@ If `$ARGUMENTS` is provided, use it as the plugin display name. Otherwise ask.
 ```bash
 git clone https://github.com/mariusroosendaal/figma-plugin-boilerplate-svelte.git <directory>
 cd <directory>
-rm -rf .git
+rm -rf .git .claude CHANGELOG.md
 ```
 
 ### 2. Install dependencies
@@ -105,12 +105,12 @@ figma.ui.onmessage = async (msg) => {
 
 ### 7. Delete the demo `README.md` and create a new one
 
-Use this structure:
+If the repository has a `README.template.md` or a README structure in its CLAUDE.md, follow that. Otherwise use this structure, and add Install, Features, Settings, Data and privacy, and a link to the guide as the plugin grows:
 
 ```markdown
 # [Plugin Display Name]
 
-[One-line description]
+[One-line summary, verb first, under 80 characters]
 
 ## What it does
 
@@ -120,7 +120,8 @@ Use this structure:
 
 1. [Step 1]
 2. [Step 2]
-3. Click "[Primary action button label]"
+3. [Step 3]
+4. Click "[Primary action button label]"
 
 ## Development
 
@@ -152,7 +153,7 @@ Tell the user:
 
 ## Packages included
 
-- **[figma-ui3-kit-svelte](https://github.com/mariusroosendaal/figma-ui3-kit-svelte)** — 39 Svelte components matching Figma's UI3 design system (`Button`, `Input`, `Dropdown`, `Tabs`, `Text`, `Modal`, etc.). Use `/figma-plugin-kit:components` for the full reference.
+- **[figma-ui3-kit-svelte](https://github.com/mariusroosendaal/figma-ui3-kit-svelte)** — Svelte components matching Figma's UI3 design system (`Button`, `Input`, `Dropdown`, `Tabs`, `Text`, `Modal`, etc.). Use `/figma-plugin-kit:components` for the full reference.
 - **[figma-plugin-utilities](https://github.com/mariusroosendaal/figma-plugin-utilities)** — Layout components (`PluginLayout`, `Header`, `Footer`, `StatusBar`) and utilities (`sendToPlugin`, `createMessageHandler`, color/validation helpers). Use `/figma-plugin-kit:utils` for the full reference.
 
 ## Handoff nudge

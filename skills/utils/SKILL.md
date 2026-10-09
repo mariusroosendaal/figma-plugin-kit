@@ -22,10 +22,10 @@ import {
   PluginLayout, Header, Footer, StatusBar,
   EmptyState, ListItem, LoadingState, FieldGroup, CheckboxCard, Section, DataTable,
   FieldGrid, SteppedField, LadderBadges, CodeExportModal, RampCurve, MappingChip,
-  ConfirmModal, confirmAction, confirmDiscardChanges,
+  ConfirmModal, confirmAction, confirmDiscardChanges, answerConfirm, confirmRequest,
   sendToPlugin, createMessageHandler,
   rgbToHex, hexToRgb, isValidHex, getLuminance, getContrastRatio, meetsContrastLevel,
-  plural, joinList,
+  plural, joinList, UNDO,
   validateUrl, validateJsonString, sanitizeInput, sanitizeName,
   validateEmail, validateNumber, isEmpty,
   formatErrorMessage, handleAsyncError, createUserErrorMessage,
@@ -81,10 +81,10 @@ Top bar with optional `left`, `center` and `right` slots.
 <!-- With icon buttons -->
 <Header title="My Plugin">
   <svelte:fragment slot="left">
-    <IconButton iconName={IconBack} on:click={goBack} />
+    <IconButton iconName={IconBack} ariaLabel="Back" on:click={goBack} />
   </svelte:fragment>
   <svelte:fragment slot="right">
-    <IconButton iconName={IconSettings} on:click={openSettings} />
+    <IconButton iconName={IconSettings} ariaLabel="Settings" on:click={openSettings} />
   </svelte:fragment>
 </Header>
 
@@ -160,10 +160,10 @@ Placeholder for empty lists or error states.
 ```svelte
 <EmptyState message="No frames found" />
 
-<!-- With icon and action -->
+<!-- With icon and action: icon takes SVG markup or a component -->
 <EmptyState
   message="No variables yet"
-  icon="variables"
+  icon={IconSearch}
   actions={[
     { label: "Create variables", handler: handleCreate },
     { label: "Import JSON", handler: handleImport },
@@ -171,7 +171,7 @@ Placeholder for empty lists or error states.
 />
 ```
 
-Props: `message`, `icon`, `actions` (array of `{ label, handler }`), `action` (a single `{ label, handler }`), `size` (`"small"` | `"medium"` | `"large"`), `centered` (default `true`), `role` (default `"status"`; use `"alert"` when the state reports a failure), `class`.
+Props: `message`, `icon` (SVG markup, such as an icon from `figma-ui3-kit-svelte/icons`, or a component), `iconSize` (px, default 24), `actions` (array of `{ label, handler }`), `action` (a single `{ label, handler }`), `size` (`"small"` | `"medium"` | `"large"`), `centered` (default `true`), `role` (default `"status"`; use `"alert"` when the state reports a failure), `class`.
 
 ---
 
@@ -231,7 +231,7 @@ Props: `label`, `preview` (after the label, as "label · preview", in secondary 
 
 ### LoadingState
 
-Centred message, as `role="status"`. There is no spinner — UI3 does not use one here.
+Centered message, as `role="status"`. There is no spinner — UI3 does not use one here.
 
 ```svelte
 {#if loading}
@@ -253,7 +253,7 @@ Label + input wrapper for forms.
 </FieldGroup>
 
 <FieldGroup label="Mode" hint={newMode ? "Created when you save." : ""}>
-  <Dropdown menuItems={modes} bind:value={selectedMode} />
+  <Dropdown menuItems={modes} bind:value={selectedMode} ariaLabel="Mode" />
 </FieldGroup>
 
 <FieldGroup label="Proxy URL" labelFor="proxy">
@@ -297,6 +297,7 @@ A titled group of fields, as in Figma's panels: a fieldset headed by `Header`, i
 <div class="controls">  <!-- no padding: sections pad themselves -->
   <Section title="Spacing scale">
     <svelte:fragment slot="actions">
+      <!-- import IconAdjust from "figma-ui3-kit-svelte/src/icons/24/icon.24.adjust.svg" -->
       <IconButton iconName={IconAdjust} ariaLabel="Edit breakpoints" on:click={openSetup} />
     </svelte:fragment>
     <FieldGroup label="Number of sets">…</FieldGroup>
@@ -681,7 +682,7 @@ figma.ui.onmessage = (msg) => {
 
 - `setDefaultWidth(width)` — set the default width used for all resize calls
 - `getContentHeight(container)` — measure element's `scrollHeight`
-- `resizeToFit(options?)` — one-shot resize: `{ width, height, minHeight, maxHeight, padding, container }`. Pass `container`: the default, `document.body`, fills the window (the kit sets `html, body, #app { height: 100% }`), so it measures the window rather than the content
+- `resizeToFit(options)` — one-shot resize: `{ width, height, minHeight, maxHeight, padding, container }`. Pass `height`, or a `container` to measure: a wrapper that flows with its content, not `document.body`, which fills the window (the kit sets `html, body, #app { height: 100% }`). With neither it warns and does nothing
 - `autoResize(options)` — watch a container via `ResizeObserver`, returns a cleanup function: `{ container, width, minHeight, maxHeight, padding, debounce, threshold }`
 
 ---

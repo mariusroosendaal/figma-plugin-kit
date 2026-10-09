@@ -4,7 +4,7 @@ description: "figma-ui3-kit-svelte component reference — all components, icons
 
 # figma-ui3-kit-svelte component reference
 
-[figma-ui3-kit-svelte](https://github.com/mariusroosendaal/figma-ui3-kit-svelte) — 40 Svelte 4 components matching Figma's UI3 design system, with light/dark theme support and 700+ icons.
+[figma-ui3-kit-svelte](https://github.com/mariusroosendaal/figma-ui3-kit-svelte) — 43 Svelte 4 components matching Figma's UI3 design system, with light/dark theme support and 700+ icons.
 
 If `$ARGUMENTS` names a specific component, show just that component's usage. Otherwise give the full reference.
 
@@ -30,6 +30,7 @@ import {
   Disclosure,
   DisclosureItem,
   Dropdown,
+  Dropzone,
   Icon,
   IconButton,
   IconToggle,
@@ -49,6 +50,7 @@ import {
   RadioGroup,
   Segment,
   SegmentedControl,
+  SidebarRow,
   Slider,
   SplitButton,
   Switch,
@@ -107,6 +109,10 @@ import {
   Icon16ChevronRight,
   Icon16ChevronDown,
 } from "figma-ui3-kit-svelte/icons";
+
+// Any other icon in src/icons/24/ imports by path, as the examples below do
+// for icons not listed above
+import IconOpacity from "figma-ui3-kit-svelte/src/icons/24/icon.24.opacity.svg";
 ```
 
 Enable Figma theme support in `code.ts`:
@@ -184,6 +190,7 @@ A dashed area that takes files dropped on it or picked with its button, as on Fi
 ### NumericInput
 
 ```svelte
+<!-- IconOpacity is imported by path: see Setup -->
 <NumericInput bind:value={x} label="X" ariaLabel="X position" />
 <NumericInput bind:value={opacity} iconName={IconOpacity} unit="%" min={0} max={100} />
 <NumericInput bind:value={size} options={[12, 14, 16, 24]} min={1} precision={0} />
@@ -322,7 +329,7 @@ A lead, and a badge before the chevron:
 
 Props: `menuItems` (array of `{ label, value }`; takes Menu's item fields — a chosen item's `iconName` or `chit` shows in the button), `value`, `placeholder`, `disabled`, `iconName`, `chit` (a lead chit when no chosen item carries one; wins over `iconName`), `label` (button text when it should not be the chosen item's menu label — a menu row can carry more than the button has room for; `""` shows the placeholder whatever is chosen), `badge` and `badgeVariant` (the kit Badge's `text` and `variant`; `badge` also takes a list of texts and `{ text, variant?, strong? }` for several, each falling back to `badgeVariant`), `size` (`"default"` | `"large"`), `stroke` (`false`: no border until hovered), `showGroupLabels`, `searchable`, `searchPlaceholder`, `invalid` and `errorMessage` (as Input: the danger border, and the message under the dropdown), `ariaLabel`, `class`. Events: `change` (the chosen item).
 
-Without `ariaLabel` the button is named by what it shows, badge included — set it only when that isn't enough.
+Always pass `ariaLabel` (CLAUDE.md, `a11y`): it names the control for tests and automation, where the visible text is only the current selection. Without it the button is named by what it shows, badge included.
 
 UI3's own Dropdown carries neither a lead chit nor a badge; the **Dropdown badge** set on the Kit additions page covers that trigger, and its Code Connect maps back onto this same component.
 
@@ -474,7 +481,7 @@ Props: `checked`, `value`, `mixed`, `disabled`, `tabindex`, `description`, `aria
 <Slider bind:value={alpha} variant="opacity" color="#9747ff" ariaLabel="Opacity" />
 ```
 
-Props: `value`, `min`, `max`, `step`, `variant` (`"range"` | `"delta"` | `"stepper"` | `"hue"` | `"opacity"`), `defaultValue` (delta's reference point; on a range slider, a marker dot there), `color` (opacity variant), `disabled`, `ariaLabel` (required), `ariaValueText`. `tabindex`, `class`. Events: `input` and `change`, both with `{ value }`, plus `focus` and `blur`. The variants do not set their own range: a `hue` slider needs `max={360}`, an `opacity` one `max={100}`.
+Props: `value`, `min`, `max`, `step`, `variant` (`"range"` | `"delta"` | `"stepper"` | `"hue"` | `"opacity"`), `defaultValue` (delta's reference point; on a range slider, a marker dot there), `color` (opacity variant), `disabled`, `ariaLabel` (required), `ariaValueText`, `tabindex`, `class`. Events: `input` and `change`, both with `{ value }`, plus `focus` and `blur`. The variants do not set their own range: a `hue` slider needs `max={360}`, an `opacity` one `max={100}`.
 
 ---
 
@@ -522,6 +529,7 @@ Props: `variant` (`"info"` | `"success"` | `"warning"` | `"danger"`), `message` 
 >
   <svelte:fragment slot="lead"><Avatar name="Wayne Sun" color="yellow" /></svelte:fragment>
   <svelte:fragment slot="actions">
+    <!-- import IconResolve from "figma-ui3-kit-svelte/src/icons/24/icon.24.resolve.svg" -->
     <IconButton iconName={IconResolve} ariaLabel="Resolve" on:click={resolve} />
   </svelte:fragment>
 </SidebarRow>
@@ -558,11 +566,11 @@ Props: `size` (`"medium"` | `"small"`), `text` (or slot), `htmlFor` (renders `<l
 
 ```svelte
 <Tooltip label="This is a tooltip">
-  <IconButton iconName={IconInfo} />
+  <IconButton iconName={IconInfoSmall} ariaLabel="About this setting" />
 </Tooltip>
 
 <Tooltip label="Undo" hotkey direction="Top">
-  <IconButton iconName={IconUndo} />
+  <IconButton iconName={IconBack} ariaLabel="Undo" />
 </Tooltip>
 ```
 
@@ -706,7 +714,7 @@ Item fields: `label`, `value`, `group` (a change draws a divider), `showHeading`
 - `type: "checkbox"` / `"toggle"` — trailing checkbox / leading switch, flips `checked` and keeps the menu open.
 - no type — an action. With `itemVariant="checkmark"` the rows are a single choice marked by `selected` (how Dropdown uses it).
 
-Props: `isOpen`, `menuItems`, `anchorElement`, `position` (`bottom-left` | `bottom-right` | `top-left` | `top-right` | `right` for sub-menus), `minWidth`, `itemVariant`, `nestingLevel` (sub-menu depth, for z-index), `menuListId`, `autofocus`, `showGroupLabels`, `searchable`, `searchPlaceholder`, `footerLabel`, `footerVariant` (`"button"` | `"row"`: a centred "+ label" row), `footerIconName`. Events: `select` (the item, after `checked` flips), `close`, `footer`.
+Props: `isOpen`, `menuItems`, `anchorElement`, `position` (`bottom-left` | `bottom-right` | `top-left` | `top-right` | `right` for sub-menus), `minWidth`, `itemVariant`, `nestingLevel` (sub-menu depth, for z-index), `menuListId`, `autofocus`, `showGroupLabels`, `searchable`, `searchPlaceholder`, `footerLabel`, `footerVariant` (`"button"` | `"row"`: a centered "+ label" row), `footerIconName`. Events: `select` (the item, after `checked` flips), `close`, `footer`.
 
 A menu taller than the window scrolls with UI3's overflow arrows: hovering the chevron row at either end scrolls it (there's no scrollbar).
 
@@ -832,7 +840,7 @@ Props: `pressed`, `iconName`, `iconNameOn` (swaps instead of filling), `highligh
 ```svelte
 <script>
   import { ToggleButton } from "figma-ui3-kit-svelte";
-  import { IconFilter } from "figma-ui3-kit-svelte/icons";
+  import IconFilter from "figma-ui3-kit-svelte/src/icons/24/icon.24.filter.svg";
 </script>
 
 <!-- Text on the selected fill while on, as IconToggle's dialog toggle -->
