@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.2.0 - 2026-10-15
+
+Follows figma-ui3-kit-svelte 0.8.0 and figma-plugin-utilities 0.6.0.
+
+- `components` — documents **ColorPicker** (and ColorInput's `picker="panel"`), **Dropzone** and **SidebarRow**; Modal's `beforeClose`; `invalid` and `errorMessage` on Dropdown, and `invalid` on NumericInput; several badges on Dropdown and menu items; Badge's colored dots; and importing any icon by path
+- `utils` — documents **Section**, **DataTable**, **FieldGrid**, **SteppedField**, **LadderBadges**, **CodeExportModal**, **ConfirmModal** (with `confirmAction` and `confirmDiscardChanges`), **RampCurve** and **MappingChip**; FieldGroup's `hint`, ListItem's `actions` slot and Header's `level`; `showNotice`; `plural`, `joinList` and `UNDO`; `isValidHex` and `rgbToHex`'s options; the font helpers and `createSettingsStore`; `lib/figma-variables`, `lib/scale` and the shared Vite config. Drops the helpers the package removed: `notifyError`, `notifySuccess`, `notifyWarning`, `getCollections`, `getVariables`, `getSelection`, `saveToStorage` and `loadFromStorage`
+- `create` — text sizes, the order of a review dialog, and notifications picked by outcome (`showError`, `showNotice`, `showSuccess`); settings through `createSettingsStore`
+- `audit` — checks notifications against those rules, and input validated next to the field rather than after the click
+- `scaffold` — the shared Vite config, and a README that follows the repository's template when it has one
+- `a11y` — Textarea, Dropdown and Dropzone announce field errors as alerts, as Input does
+
 ## 1.1.0 - 2026-09-21
 
 Follows figma-ui3-kit-svelte 0.6.0 and figma-plugin-utilities 0.4.0.
